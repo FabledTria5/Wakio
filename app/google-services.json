@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1037676303513",
+    "project_id": "wakio-ae407",
+    "storage_bucket": "wakio-ae407.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1037676303513:android:ea712fb5fca678bd269408",
+        "android_client_info": {
+          "package_name": "dev.fabled.wakio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1037676303513-u686bknejo6fjnf1qs9a1f1p7fn0bohd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjF8jAXU04Rlbi_ck0aS5ZhqB8-7ItNyo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1037676303513-u686bknejo6fjnf1qs9a1f1p7fn0bohd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

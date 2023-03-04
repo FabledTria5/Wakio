@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="activity_permission_rationale">Please, provide activity permission. This will help us to bring you the complete experience while using this app</string>
+    <string name="grant_permission">Grant permission</string>
+    <string name="ok">OK</string>
+</resources>

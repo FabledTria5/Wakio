@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="password_hint">Password</string>
+    <string name="enter_username_hint">Enter Username</string>
+    <string name="or">or</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="sign_in">Sign In</string>
+    <string name="welcome_back">Welcome back. You\'ve been missed!</string>
+    <string name="hi_there">Hi There!</string>
+    <string name="email_placeholder">Enter Email</string>
+    <string name="sign_in_question">Don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in_message">Welcome back, you\'ve been missed</string>
+    <string name="sign_up_message">Welcome to Wakio, the best solution for healthy life</string>
+    <string name="email_hint">Email</string>
+    <string name="sign_up_question">Already have an account?</string>
+    <string name="pick_image">Pick Image</string>
+    <string name="finish">Finish!</string>
+    <string name="next">Next</string>
+    <string name="before_sunrise">Before sunrise</string>
+    <string name="sunrising">Sun Is About To Rise</string>
+    <string name="sunset">Sunset</string>
+    <string name="after_sunrise">After Sunrise</string>
+    <string name="select_gender">Please, select your gender</string>
+    <string name="icon_male">Male icon</string>
+    <string name="icon_female">Female icon</string>
+    <string name="save">Save</string>
+    <string name="customize_experience">Let\'s Customize Your experience</string>
+</resources>

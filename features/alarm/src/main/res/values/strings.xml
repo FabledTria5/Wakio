@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="set_alarm">Set Alarm</string>
+    <string name="save">Save</string>
+    <string name="alarm_name">Alarm name</string>
+    <string name="volume">Volume</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="sound">Sound</string>
+    <string name="repeat">Repeat</string>
+    <string name="enter_name">Enter name</string>
+    <string name="alarm">Alarm</string>
+    <string name="edit">Edit</string>
+    <string name="add_alarm">Add alarm</string>
+    <string name="bake_kujira">Bake Kujira</string>
+    <string name="bittersweet">Bittersweet</string>
+    <string name="feeling_alive">Feeling Alive</string>
+    <string name="floating_world">Floating World</string>
+    <string name="flow_of_time">Flow of Time</string>
+    <string name="hazakura">Hazakura</string>
+    <string name="houou">Houou</string>
+    <string name="ikigai">Ikigai</string>
+    <string name="kinou">Kinou</string>
+    <string name="kitsune">Kitsune</string>
+    <string name="kogarashi">Kogarashi</string>
+    <string name="komorebi">Komorebi</string>
+    <string name="kouyou">Kouyou</string>
+    <string name="lotus_book">Lotus Book</string>
+    <string name="natsukashi">Natsukashi</string>
+    <string name="ookami">Ookami</string>
+    <string name="red_autumn">Red Autumn</string>
+    <string name="ukiyo">Ukiyo</string>
+    <string name="set_alarm_sound">Set alarm sound</string>
+    <string name="button_play">Play button</string>
+</resources>
