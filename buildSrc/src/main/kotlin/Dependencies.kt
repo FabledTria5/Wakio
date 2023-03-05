@@ -108,7 +108,8 @@ object Dependencies {
         "com.google.firebase:firebase-firestore-ktx:${Versions.fire_store_version}"
     const val firebaseCoroutines =
         "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:${Versions.coroutines_core_version}"
-    const val googleAuthentication = "com.google.android.gms:play-services-auth:${Versions.google_authentication_version}"
+    const val googleAuthentication =
+        "com.google.android.gms:play-services-auth:${Versions.google_authentication_version}"
 
     // Design
     const val appcompat = "androidx.appcompat:appcompat:${Versions.appCompat_version}"
@@ -145,6 +146,8 @@ object Dependencies {
         "com.google.accompanist:accompanist-pager-indicators:${Versions.accompanist_version}"
     const val flowLayout =
         "com.google.accompanist:accompanist-flowlayout:${Versions.accompanist_version}"
+    const val permissions =
+        "com.google.accompanist:accompanist-permissions:${Versions.accompanist_version}"
 
     // Dagger Hilt
     const val hiltAndroid = "com.google.dagger:hilt-android:${Versions.hilt_android_version}"

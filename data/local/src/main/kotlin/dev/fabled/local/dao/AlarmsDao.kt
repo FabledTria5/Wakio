@@ -19,4 +19,7 @@ interface AlarmsDao {
     @Query(value = "SELECT * FROM alarm_table")
     fun getAlarms(): Flow<List<AlarmEntity>>
 
+    @Query(value = "DELETE FROM alarm_table WHERE id = :alarmId")
+    fun deleteAlarm(alarmId: Int)
+
 }

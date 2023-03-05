@@ -23,7 +23,7 @@ class CreateNewAlarm @Inject constructor(
 
         when (result) {
             is Resource.Success -> {
-                applicationUtil.setupAlarm(alarmModel, result.data)
+                applicationUtil.setupAlarm(alarmModel, result.data.toInt())
             }
 
             else -> emit(result)

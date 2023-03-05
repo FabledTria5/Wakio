@@ -43,7 +43,8 @@ dependencies {
     // Core
     implementation(dependencyNotation = Dependencies.kotlinCoreKtx)
 
-    implementation("com.google.accompanist:accompanist-permissions:0.29.1-alpha")
+    // Accompanist
+    implementation(dependencyNotation = Dependencies.permissions)
 
     // Dagger Hilt
     implementation(dependencyNotation = Dependencies.hiltAndroid)

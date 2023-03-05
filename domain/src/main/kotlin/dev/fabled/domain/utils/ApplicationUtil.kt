@@ -6,6 +6,8 @@ interface ApplicationUtil {
 
     fun isInternetAvailable(): Boolean
 
-    fun setupAlarm(alarmModel: AlarmModel, alarmId: Long)
+    fun setupAlarm(alarmModel: AlarmModel, alarmId: Int)
+
+    fun removeAlarm(alarmModel: AlarmModel)
 
 }

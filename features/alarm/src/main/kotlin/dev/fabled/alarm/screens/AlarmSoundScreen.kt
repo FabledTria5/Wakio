@@ -1,9 +1,7 @@
 package dev.fabled.alarm.screens
 
-import android.content.Context
 import android.media.MediaPlayer
 import androidx.activity.compose.BackHandler
-import androidx.annotation.RawRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -54,6 +52,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.fabled.alarm.AlarmViewModel
 import dev.fabled.alarm.R
 import dev.fabled.alarm.model.AlarmSoundModel
+import dev.fabled.alarm.utils.playRawResAudio
 import dev.fabled.common.ui.theme.Oxygen
 import dev.fabled.common.ui.theme.PrimaryDark
 import dev.fabled.common.ui.theme.PrimaryGradient
@@ -80,7 +79,7 @@ fun AlarmSoundScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewMod
 
     DisposableEffect(key1 = currentPlayingTrack) {
         if (currentPlayingTrack != null) {
-            playAudio(
+            playRawResAudio(
                 context = context,
                 mediaPlayer = mediaPlayer,
                 audioRes = currentPlayingTrack!!.audio
@@ -244,19 +243,4 @@ private fun AlarmSoundListItem(
             }
         }
     }
-}
-
-private fun playAudio(context: Context, mediaPlayer: MediaPlayer, @RawRes audioRes: Int) {
-    val assertFileDescriptor = context.resources.openRawResourceFd(audioRes)
-
-    assertFileDescriptor.use { descriptor ->
-        mediaPlayer.setDataSource(
-            descriptor.fileDescriptor,
-            descriptor.startOffset,
-            descriptor.length
-        )
-    }
-
-    mediaPlayer.prepare()
-    mediaPlayer.start()
 }

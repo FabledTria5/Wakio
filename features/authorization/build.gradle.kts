@@ -69,9 +69,10 @@ dependencies {
     // Testing
     testImplementation(dependencyNotation = Dependencies.junit)
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.45")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.45")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")
     androidTestImplementation(dependencyNotation = Dependencies.androidJunit)
     androidTestImplementation(dependencyNotation = Dependencies.espressoCore)
     androidTestImplementation(dependencyNotation = Dependencies.junitCompose)
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.45")
+
 }

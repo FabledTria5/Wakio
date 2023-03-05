@@ -1,6 +1,7 @@
 package dev.fabled.home.screens
 
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
@@ -67,6 +68,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import dev.fabled.common.ui.theme.BackgroundColor
 import dev.fabled.common.ui.theme.LightRed
 import dev.fabled.common.ui.theme.OrangeGradient
 import dev.fabled.common.ui.theme.Oxygen
@@ -159,8 +161,10 @@ private fun HomeTopBar(
     val imageRequest = ImageRequest.Builder(context)
         .crossfade(enable = true)
         .data(welcomeData.userGender?.icon)
-        .placeholder(R.drawable.person_placeholder)
+        .placeholder(ColorDrawable(0xFF212327.toInt()))
         .build()
+
+    BackgroundColor
 
     val painter = rememberAsyncImagePainter(model = imageRequest)
 

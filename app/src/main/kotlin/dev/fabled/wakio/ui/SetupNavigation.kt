@@ -94,7 +94,11 @@ fun BottomNavigationBar(
         }
     }
 
-    AnimatedVisibility(visible = isVisible, enter = fadeIn(), exit = fadeOut()) {
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         NavigationBar(
             modifier = Modifier.fillMaxWidth(),
             containerColor = MaterialTheme.colorScheme.background

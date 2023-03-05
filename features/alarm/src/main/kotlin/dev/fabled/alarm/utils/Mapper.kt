@@ -32,3 +32,18 @@ fun AlarmModel.toUiModel(): AlarmUiModel = AlarmUiModel(
     isAlarmEnabled = mutableStateOf(isAlarmEnabled),
     gradientUiModel = mutableStateOf(GradientUiModel.getByTag(gradientTag))
 )
+
+fun AlarmUiModel.toDomainModel(): AlarmModel = AlarmModel(
+    alarmId = alarmId,
+    alarmName = alarmName.value,
+    alarmHour = alarmTime.value.hours,
+    alarmMinute = alarmTime.value.minutes,
+    alarmDays = alarmDays
+        .filter { it.isChecked.value }
+        .map { it.dayOfWeekNumber },
+    alarmSoundTag = alarmSoundModel.value.tag,
+    alarmVolume = alarmVolume.value,
+    isVibrationEnabled = isVibrating.value,
+    isAlarmEnabled = isAlarmEnabled.value,
+    gradientTag = gradientUiModel.value.tag
+)

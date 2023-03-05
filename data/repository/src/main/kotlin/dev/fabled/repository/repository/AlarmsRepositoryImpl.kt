@@ -28,6 +28,8 @@ class AlarmsRepositoryImpl @Inject constructor(
         return alarmsDao.insertAlarm(alarmEntity)
     }
 
+    override suspend fun deleteAlarm(alarmId: Int) = alarmsDao.deleteAlarm(alarmId)
+
     override suspend fun checkUniqueAlarmName(alarmName: String): Boolean =
         alarmsDao.isAlarmExists(alarmName)
 

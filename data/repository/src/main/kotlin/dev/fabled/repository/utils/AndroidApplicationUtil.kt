@@ -42,15 +42,16 @@ class AndroidApplicationUtil @Inject constructor(
         }
     }
 
-    override fun setupAlarm(alarmModel: AlarmModel, alarmId: Long) {
+    override fun setupAlarm(alarmModel: AlarmModel, alarmId: Int) {
         alarmModel.alarmDays.forEach { dayValue ->
             val alarmIntent = Intent("dev.fabled.alarm.broadcast").apply {
-                putExtra("IS_VIBRATION_ENABLED", alarmModel.isVibrationEnabled)
+                putExtra("ALARM_SOUND_TAG", alarmModel.alarmSoundTag)
                 putExtra("ALARM_VOLUME", alarmModel.alarmVolume)
+                putExtra("IS_VIBRATION_ENABLED", alarmModel.isVibrationEnabled)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
-                alarmModel.alarmId,
+                alarmId,
                 alarmIntent,
                 PendingIntent.FLAG_IMMUTABLE
             )
@@ -68,8 +69,23 @@ class AndroidApplicationUtil @Inject constructor(
                 pendingIntent
             )
 
-            Timber.d("Alarm has been set for scheduled time")
+            Timber.d("Alarm has been set for day with value $dayValue")
         }
     }
 
+    override fun removeAlarm(alarmModel: AlarmModel) {
+        alarmModel.alarmDays.forEach { dayValue ->
+            val alarmIntent = Intent("dev.fabled.alarm.broadcast")
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                alarmModel.alarmId.toInt(),
+                alarmIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            alarmManager.cancel(pendingIntent)
+
+            Timber.d("Alarm with id ${alarmModel.alarmId} has been removed for day with value $dayValue")
+        }
+    }
 }

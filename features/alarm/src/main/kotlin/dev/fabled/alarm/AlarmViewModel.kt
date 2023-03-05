@@ -1,7 +1,6 @@
 package dev.fabled.alarm
 
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +11,7 @@ import dev.fabled.alarm.utils.toUiModel
 import dev.fabled.domain.model.AlarmModel
 import dev.fabled.domain.model.Resource
 import dev.fabled.domain.use_cases.alarms.CreateNewAlarm
+import dev.fabled.domain.use_cases.alarms.DeleteAlarm
 import dev.fabled.domain.use_cases.alarms.GetAlarmList
 import dev.fabled.navigation.navigation_core.Navigator
 import dev.fabled.navigation.navigation_directions.AlarmDirections
@@ -33,10 +33,12 @@ import javax.inject.Inject
 class AlarmViewModel @Inject constructor(
     private val navigator: Navigator,
     private val createNewAlarm: CreateNewAlarm,
+    private val deleteAlarm: DeleteAlarm,
     getAlarmList: GetAlarmList
 ) : ViewModel(), Navigator by navigator {
 
-    val alarmsList = mutableStateListOf<AlarmUiModel>()
+    private val _alarmsList = MutableStateFlow<List<AlarmUiModel>>(emptyList())
+    val alarmsList = _alarmsList.asStateFlow()
 
     private val _selectedAlarm = MutableStateFlow(AlarmUiModel())
     val selectedAlarm = _selectedAlarm.asStateFlow()
@@ -46,28 +48,14 @@ class AlarmViewModel @Inject constructor(
             .map { modelsList ->
                 modelsList.map { model -> model.toUiModel() }
             }
-            .onEach { list ->
-                Timber.d("Received list with ${list.count()} elements")
-                Timber.d("Alarm days: ${list.first().alarmDays.toList()}")
-                alarmsList.addAll(list)
-            }
-            .catch { exception ->
-                Timber.e(exception)
-            }
+            .onEach { list -> _alarmsList.update { list } }
+            .catch { exception -> Timber.e(exception) }
             .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
     }
 
-    private fun updateSelectedAlarm(alarmId: Int) {
-        _selectedAlarm.update {
-            alarmsList
-                .find { it.alarmId == alarmId }
-                ?: AlarmUiModel()
-        }
-    }
-
-    fun openAlarmEditScreen(alarmId: Int) {
-        updateSelectedAlarm(alarmId)
+    fun openAlarmEditScreen(alarmUiModel: AlarmUiModel = AlarmUiModel()) {
+        _selectedAlarm.update { alarmUiModel }
         navigator.navigate(AlarmDirections.AlarmEditScreen.route())
     }
 
@@ -127,6 +115,27 @@ class AlarmViewModel @Inject constructor(
                     else -> Unit
                 }
             }
+        }
+    }
+
+    fun removeAlarm(alarmUiModel: AlarmUiModel) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteAlarm(
+                alarmModel = AlarmModel(
+                    alarmId = alarmUiModel.alarmId,
+                    alarmName = alarmUiModel.alarmName.value,
+                    alarmHour = alarmUiModel.alarmTime.value.hours,
+                    alarmMinute = alarmUiModel.alarmTime.value.minutes,
+                    alarmDays = alarmUiModel.alarmDays
+                        .filter { it.isChecked.value }
+                        .map { it.dayOfWeekNumber },
+                    alarmSoundTag = alarmUiModel.alarmSoundModel.value.tag,
+                    alarmVolume = alarmUiModel.alarmVolume.value,
+                    isVibrationEnabled = alarmUiModel.isVibrating.value,
+                    isAlarmEnabled = true,
+                    gradientTag = alarmUiModel.gradientUiModel.value.tag
+                )
+            )
         }
     }
 
