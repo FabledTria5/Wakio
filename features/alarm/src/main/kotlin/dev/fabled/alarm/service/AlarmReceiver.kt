@@ -3,6 +3,7 @@ package dev.fabled.alarm.service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import timber.log.Timber
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -11,6 +12,8 @@ class AlarmReceiver : BroadcastReceiver() {
     }
 
     override fun onReceive(content: Context, intent: Intent?) {
+        Timber.d("Receiver starts...")
+
         val serviceIntent = Intent(content, AlarmService::class.java).apply {
             putExtra(
                 AlarmService.ALARM_SOUND_TAG,
@@ -26,7 +29,7 @@ class AlarmReceiver : BroadcastReceiver() {
             )
         }
 
-        content.startService(Intent(content, AlarmService::class.java))
+        content.startService(serviceIntent)
     }
 
 }

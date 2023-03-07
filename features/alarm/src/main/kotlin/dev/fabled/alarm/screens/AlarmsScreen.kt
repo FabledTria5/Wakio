@@ -59,7 +59,10 @@ import dev.fabled.common.ui.theme.PrimaryGradient
 import dev.fabled.common.ui.theme.PrimaryLight
 import dev.fabled.common.ui.utils.gradientBackground
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalTextApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalTextApi::class,
+)
 @Composable
 fun AlarmsScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewModel) {
     val alarmsList by alarmViewModel.alarmsList.collectAsStateWithLifecycle()

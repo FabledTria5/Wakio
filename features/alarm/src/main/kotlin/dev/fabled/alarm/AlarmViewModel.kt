@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.fabled.alarm.model.AlarmSoundModel
 import dev.fabled.alarm.model.AlarmUiModel
-import dev.fabled.alarm.model.TimeModel
 import dev.fabled.alarm.utils.toUiModel
 import dev.fabled.domain.model.AlarmModel
 import dev.fabled.domain.model.Resource
@@ -63,8 +62,18 @@ class AlarmViewModel @Inject constructor(
         _selectedAlarm.value.alarmName.value = newName
     }
 
-    fun updateTime(timeModel: TimeModel) {
-        _selectedAlarm.value.alarmTime.value = timeModel
+    fun updateHours(hours: Int) {
+        _selectedAlarm.value.alarmTime.value =
+            _selectedAlarm.value.alarmTime.value.copy(hours = hours)
+
+        Timber.e(_selectedAlarm.value.alarmTime.value.toString())
+    }
+
+    fun updateMinutes(minutes: Int) {
+        _selectedAlarm.value.alarmTime.value =
+            _selectedAlarm.value.alarmTime.value.copy(minutes = minutes)
+
+        Timber.e(_selectedAlarm.value.alarmTime.value.toString())
     }
 
     fun onDaySelected(index: Int) {

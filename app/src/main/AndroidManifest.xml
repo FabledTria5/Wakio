@@ -5,16 +5,12 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
-    <uses-permission android:name="android.permission.health.READ_STEPS" />
-
-    <queries>
-        <package android:name="com.google.android.apps.healthdata" />
-    </queries>
 
     <application
         android:name=".WakioApplication"
@@ -49,15 +45,18 @@
 
         <receiver
             android:name="dev.fabled.alarm.service.AlarmReceiver"
-            android:exported="false">
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="dev.fabled.alarm.broadcast" />
             </intent-filter>
         </receiver>
 
-        <service android:name="dev.fabled.alarm.service.AlarmService" />
-        <service android:name="dev.fabled.common.code.service.StepsCountService" />
-        <service android:name=".service.AlarmSyncService" />
+        <service
+            android:name="dev.fabled.alarm.service.AlarmService"
+            android:enabled="true"
+            android:exported="false" />
 
     </application>
 

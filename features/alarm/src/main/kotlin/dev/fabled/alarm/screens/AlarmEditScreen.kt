@@ -34,6 +34,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -69,6 +70,11 @@ fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewMode
     val selectedAlarm by alarmViewModel.selectedAlarm.collectAsStateWithLifecycle()
 
     var isAlarmNameDialogVisible by rememberSaveable { mutableStateOf(value = false) }
+    val canSaveAlarm by remember {
+        derivedStateOf {
+            selectedAlarm.alarmDays.any { it.isChecked.value }
+        }
+    }
 
     val onUpdateAlarmName: (String) -> Unit = remember {
         { newName ->
@@ -84,6 +90,7 @@ fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewMode
         topBar = {
             AlarmEditTopBar(
                 modifier = Modifier.fillMaxWidth(),
+                canSaveAlarm = canSaveAlarm,
                 onCancelClick = alarmViewModel::navigateUp,
                 onSaveClick = alarmViewModel::saveAlarm
             )
@@ -102,8 +109,9 @@ fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewMode
                 modifier = Modifier
                     .padding(vertical = 25.dp)
                     .fillMaxWidth(),
-                timeModel = selectedAlarm.alarmTime.value,
-                onTimeChanged = alarmViewModel::updateTime
+                initialTime = selectedAlarm.alarmTime.value,
+                onHoursChanged = alarmViewModel::updateHours,
+                onMinutesChanged = alarmViewModel::updateMinutes
             )
             RepeatModeSelector(
                 modifier = Modifier.fillMaxWidth(),
@@ -148,6 +156,7 @@ fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewMode
 @Composable
 fun AlarmEditTopBar(
     modifier: Modifier = Modifier,
+    canSaveAlarm: Boolean,
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
@@ -172,7 +181,11 @@ fun AlarmEditTopBar(
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp
         )
-        TextButton(onClick = onSaveClick, contentPadding = PaddingValues()) {
+        TextButton(
+            onClick = onSaveClick,
+            contentPadding = PaddingValues(),
+            enabled = canSaveAlarm
+        ) {
             Text(
                 text = stringResource(R.string.save),
                 style = TextStyle(brush = PrimaryGradient),

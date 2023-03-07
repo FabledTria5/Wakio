@@ -33,8 +33,9 @@ import kotlin.math.absoluteValue
 @Composable
 fun TimeCarousel(
     modifier: Modifier = Modifier,
-    timeModel: TimeModel = TimeModel(),
-    onTimeChanged: (TimeModel) -> Unit
+    initialTime: TimeModel,
+    onHoursChanged: (Int) -> Unit,
+    onMinutesChanged: (Int) -> Unit
 ) {
     val hours = (0..23).map { if (it.toString().length == 1) "0$it" else it.toString() }
     val minutes = (0..59).map { if (it.toString().length == 1) "0$it" else it.toString() }
@@ -61,12 +62,10 @@ fun TimeCarousel(
         PickerCarousel(
             modifier = Modifier.height(250.dp),
             items = hours,
-            initialItem = timeModel.hours,
+            initialItem = initialTime.hours,
             activeElementColor = Color.White,
             textSize = 56.sp,
-            onItemChanged = {
-                onTimeChanged(timeModel.copy(hours = it.toInt()))
-            }
+            onItemChanged = { onHoursChanged(it.toInt()) }
         )
         Text(
             modifier = Modifier.padding(horizontal = 15.dp),
@@ -77,12 +76,10 @@ fun TimeCarousel(
         PickerCarousel(
             modifier = Modifier.height(250.dp),
             items = minutes,
-            initialItem = timeModel.minutes,
+            initialItem = initialTime.minutes,
             activeElementColor = Color.White,
             textSize = 56.sp,
-            onItemChanged = {
-                onTimeChanged(timeModel.copy(minutes = it.toInt()))
-            }
+            onItemChanged = { onMinutesChanged(it.toInt()) }
         )
     }
 }

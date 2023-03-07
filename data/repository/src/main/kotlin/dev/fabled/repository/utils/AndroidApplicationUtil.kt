@@ -49,6 +49,7 @@ class AndroidApplicationUtil @Inject constructor(
                 putExtra("ALARM_VOLUME", alarmModel.alarmVolume)
                 putExtra("IS_VIBRATION_ENABLED", alarmModel.isVibrationEnabled)
             }
+
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
                 alarmId,
@@ -60,9 +61,13 @@ class AndroidApplicationUtil @Inject constructor(
                 set(Calendar.DAY_OF_WEEK, dayValue)
                 set(Calendar.HOUR, alarmModel.alarmHour)
                 set(Calendar.MINUTE, alarmModel.alarmMinute)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
             }
 
-            alarmManager.setInexactRepeating(
+            Timber.d("Alarm will be set for calendar value $calendar")
+
+            alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 calendar.timeInMillis,
                 7.days.inWholeMilliseconds,
@@ -78,7 +83,7 @@ class AndroidApplicationUtil @Inject constructor(
             val alarmIntent = Intent("dev.fabled.alarm.broadcast")
             val pendingIntent = PendingIntent.getBroadcast(
                 context,
-                alarmModel.alarmId.toInt(),
+                alarmModel.alarmId,
                 alarmIntent,
                 PendingIntent.FLAG_IMMUTABLE
             )
