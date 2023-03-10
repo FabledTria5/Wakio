@@ -6,7 +6,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -35,7 +34,7 @@ import dev.fabled.wakio.navigation.primaryGraph
 import dev.fabled.wakio.navigation.startUpGraph
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SetupNavigation(navigator: Navigator) {
     val navHostController = rememberAnimatedNavController()
@@ -53,6 +52,8 @@ fun SetupNavigation(navigator: Navigator) {
                     route = event.destination,
                     builder = event.builder
                 )
+
+                else -> Unit
             }
         }
     }
@@ -69,7 +70,7 @@ fun SetupNavigation(navigator: Navigator) {
     ) {
         AnimatedNavHost(
             navController = navHostController,
-            startDestination = "start_up"
+            startDestination = "primary_directions"
         ) {
             startUpGraph()
             authorizationGraph(viewModelStoreOwner = viewModelStoreOwner)

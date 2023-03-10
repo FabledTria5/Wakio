@@ -1,6 +1,5 @@
 package dev.fabled.alarm.screens.full_screen_alarm
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -11,8 +10,15 @@ import android.os.IBinder
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
+import androidx.core.view.WindowCompat
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.fabled.alarm.service.AlarmService
+import dev.fabled.common.ui.theme.WakioTheme
 
 @AndroidEntryPoint
 class AlarmFullScreenActivity : ComponentActivity() {
@@ -28,18 +34,28 @@ class AlarmFullScreenActivity : ComponentActivity() {
         override fun onServiceDisconnected(name: ComponentName?) = Unit
     }
 
-    @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         showOnLockedScreen()
 
         setContent {
-            WorkingAlarmScreen(
-                onCloseScreenClicked = {
-                    alarmService.stopService()
-                    finish()
+            WakioTheme {
+                val systemUiController = rememberSystemUiController()
+
+                SideEffect {
+                    systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = false)
                 }
-            )
+
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    WorkingAlarmScreen(
+                        onCloseScreenClicked = {
+                            alarmService.stopService()
+                            finish()
+                        }
+                    )
+                }
+            }
         }
     }
 

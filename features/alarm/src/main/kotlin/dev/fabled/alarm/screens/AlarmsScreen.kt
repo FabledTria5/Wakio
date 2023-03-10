@@ -59,10 +59,7 @@ import dev.fabled.common.ui.theme.PrimaryGradient
 import dev.fabled.common.ui.theme.PrimaryLight
 import dev.fabled.common.ui.utils.gradientBackground
 
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalTextApi::class,
-)
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun AlarmsScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewModel) {
     val alarmsList by alarmViewModel.alarmsList.collectAsStateWithLifecycle()
@@ -245,7 +242,7 @@ private fun AlarmListItem(
                     text = "${alarmUiModel.alarmTime.value.hours}" +
                             ":" +
                             if (alarmUiModel.alarmTime.value.minutes < 10)
-                                "${alarmUiModel.alarmTime.value.minutes}0"
+                                "0${alarmUiModel.alarmTime.value.minutes}"
                             else
                                 alarmUiModel.alarmTime.value.minutes,
                     color = Color.White,

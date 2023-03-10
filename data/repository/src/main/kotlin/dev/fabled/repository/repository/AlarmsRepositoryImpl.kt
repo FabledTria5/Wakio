@@ -22,7 +22,7 @@ class AlarmsRepositoryImpl @Inject constructor(
         return -1
     }
 
-    override suspend fun createNewAlarmOffline(alarmModel: AlarmModel): Long {
+    override suspend fun createNewAlarmOffline(alarmModel: AlarmModel) {
         val alarmEntity = alarmModel.toAlarmEntity()
 
         return alarmsDao.insertAlarm(alarmEntity)

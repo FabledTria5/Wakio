@@ -1,9 +1,11 @@
 package dev.fabled.alarm.service
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
@@ -16,7 +18,6 @@ import dev.fabled.alarm.R
 import dev.fabled.alarm.model.AlarmSoundModel
 import dev.fabled.alarm.screens.full_screen_alarm.AlarmFullScreenActivity
 import dev.fabled.alarm.utils.playRawResAudio
-import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 @SuppressLint("MissingPermission")
@@ -24,6 +25,7 @@ class AlarmService : Service() {
 
     companion object {
         private const val INTENT_REQUEST_CODE = 0
+        private const val notificationId = 513341
 
         const val ALARM_SOUND_TAG = "ALARM_SOUND_TAG"
         const val ALARM_VOLUME = "ALARM_VOLUME"
@@ -34,14 +36,20 @@ class AlarmService : Service() {
 
     private val vibrator by lazy { getSystemService(Vibrator::class.java) }
 
+    private val notificationManager by lazy { getSystemService(NotificationManager::class.java) }
+
+    private val audioManager by lazy { getSystemService(AudioManager::class.java) }
+
     private val mediaPlayer by lazy { MediaPlayer() }
+
+    private var deviceVolume = 0
 
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val alarmSoundModel = intent.getStringExtra(ALARM_SOUND_TAG)?.let { tag ->
             AlarmSoundModel.getByTag(tag)
-        } ?: AlarmSoundModel.BakeKujira
+        } ?: AlarmSoundModel.default()
         val alarmVolume = intent.getFloatExtra(ALARM_VOLUME, .5f)
         val isVibrating = intent.getBooleanExtra(IS_VIBRATION_ENABLED, true)
 
@@ -57,6 +65,7 @@ class AlarmService : Service() {
 
     private fun createFullScreenAlarm() {
         val fullScreenIntent = Intent(baseContext, AlarmFullScreenActivity::class.java)
+
         val pendingIntent = PendingIntent.getActivity(
             baseContext,
             INTENT_REQUEST_CODE,
@@ -72,9 +81,10 @@ class AlarmService : Service() {
             .setFullScreenIntent(pendingIntent, true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setSound(null)
             .build()
 
-        startForeground(Random.nextInt(from = 1, until = 1000), notification)
+        notificationManager.notify(notificationId, notification)
     }
 
     @Suppress("DEPRECATION")
@@ -90,14 +100,23 @@ class AlarmService : Service() {
     }
 
     private fun startVibrate() {
-        val vibrationPattern = longArrayOf(0, 10, 200, 500, 700, 1000, 300, 200, 50, 10)
+        val vibrationPattern = longArrayOf(0, 500, 250, 500, 250, 1000)
         val vibrationEffect = VibrationEffect.createWaveform(vibrationPattern, 0)
 
         vibrator.vibrate(vibrationEffect)
     }
 
     private fun startMusic(volume: Float, @RawRes sound: Int) {
-        mediaPlayer.setVolume(volume, volume)
+        if (!audioManager.isVolumeFixed) {
+            val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+
+            deviceVolume = currentVolume
+
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+            val targetVolume = (maxVolume * volume).toInt()
+
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, targetVolume, 0)
+        }
 
         playRawResAudio(this, mediaPlayer, sound)
     }
@@ -107,6 +126,11 @@ class AlarmService : Service() {
 
         mediaPlayer.stop()
         mediaPlayer.release()
+
+        if (!audioManager.isVolumeFixed)
+            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, deviceVolume, 0)
+
+        notificationManager.cancel(notificationId)
 
         stopSelf()
     }

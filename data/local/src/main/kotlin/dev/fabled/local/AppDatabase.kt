@@ -11,7 +11,7 @@ import dev.fabled.local.entities.QuoteEntity
 
 @Database(
     entities = [QuoteEntity::class, ArticleEntity::class, AlarmEntity::class],
-    version = 5,
+    version = 6,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {

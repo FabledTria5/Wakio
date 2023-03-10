@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface AlarmsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAlarm(alarmEntity: AlarmEntity): Long
+    suspend fun insertAlarm(alarmEntity: AlarmEntity)
 
     @Query(value = "SELECT EXISTS(SELECT * FROM alarm_table WHERE alarm_name = :alarmName)")
     suspend fun isAlarmExists(alarmName: String): Boolean

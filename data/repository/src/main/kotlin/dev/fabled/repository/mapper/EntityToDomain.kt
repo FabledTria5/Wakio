@@ -19,7 +19,8 @@ fun Flow<List<AlarmEntity>>.toAlarmsModelsList(): Flow<List<AlarmModel>> = map {
             alarmVolume = entity.alarmVolume,
             isVibrationEnabled = entity.isVibrationEnabled,
             isAlarmEnabled = entity.isAlarmEnabled,
-            gradientTag = entity.alarmGradientTag
+            gradientTag = entity.alarmGradientTag,
+            createdAt = entity.createdAt
         )
     }
 }

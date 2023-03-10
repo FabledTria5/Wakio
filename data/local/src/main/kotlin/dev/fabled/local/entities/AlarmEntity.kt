@@ -26,5 +26,7 @@ data class AlarmEntity(
     @ColumnInfo(name = "is_alarm_enabled")
     val isAlarmEnabled: Boolean,
     @ColumnInfo(name = "alarm_gradient_tag")
-    val alarmGradientTag: String
+    val alarmGradientTag: String,
+    @ColumnInfo(name = "created_at")
+    val createdAt: Long
 )

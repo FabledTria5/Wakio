@@ -47,16 +47,13 @@
             android:name="dev.fabled.alarm.service.AlarmReceiver"
             android:enabled="true"
             android:exported="true"
-            tools:ignore="ExportedReceiver">
-            <intent-filter>
-                <action android:name="dev.fabled.alarm.broadcast" />
-            </intent-filter>
-        </receiver>
+            tools:ignore="ExportedReceiver" />
 
         <service
             android:name="dev.fabled.alarm.service.AlarmService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
 
     </application>
 

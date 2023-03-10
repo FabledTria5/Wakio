@@ -9,7 +9,7 @@ interface AlarmsRepository {
 
     suspend fun deleteAlarm(alarmId: Int)
 
-    suspend fun createNewAlarmOffline(alarmModel: AlarmModel): Long
+    suspend fun createNewAlarmOffline(alarmModel: AlarmModel)
 
     suspend fun checkUniqueAlarmName(alarmName: String): Boolean
 

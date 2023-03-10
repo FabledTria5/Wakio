@@ -10,7 +10,7 @@ object Config {
     const val applicationId = "dev.fabled.wakio"
     const val testRunner = "androidx.test.runner.AndroidJUnitRunner"
     const val jvmTargetVersion = "11"
-    const val composeCompilerExtensionVersion = "1.4.2"
+    const val composeCompilerExtensionVersion = "1.4.3"
 
     val javaVersion = JavaVersion.VERSION_11
 }
@@ -32,7 +32,7 @@ object Versions {
 
     // Firebase
     const val firebase_auth_version = "21.1.0"
-    const val fire_store_version = "24.4.3"
+    const val fire_store_version = "24.4.4"
     const val coroutines_core_version = "1.6.4"
     const val google_authentication_version = "20.4.1"
 
@@ -40,15 +40,15 @@ object Versions {
     const val appCompat_version = "1.6.0-rc01"
 
     // Compose
-    const val compose_version = "1.4.0-beta02"
-    const val compose_material_version = "1.1.0-alpha06"
+    const val compose_version = "1.4.0-rc01"
+    const val compose_material_version = "1.1.0-alpha08"
     const val activity_compose_version = "1.6.1"
     const val accompanist_version = "0.29.1-alpha"
     const val coil_version = "2.2.2"
     const val hilt_compose_version = "1.1.0-alpha01"
     const val customview_version = "1.2.0-alpha02"
     const val pooling_container_version = "1.0.0"
-    const val constraint_layout_version = "1.1.0-alpha07"
+    const val constraint_layout_version = "1.1.0-alpha08"
     const val ui_util_version = "1.3.2"
 
     // Dagger Hilt

@@ -147,6 +147,8 @@ sealed class AlarmSoundModel(
             .find { sound -> sound.tag == tag }
             ?: BakeKujira
 
+        fun default() = BakeKujira
+
     }
 
 }

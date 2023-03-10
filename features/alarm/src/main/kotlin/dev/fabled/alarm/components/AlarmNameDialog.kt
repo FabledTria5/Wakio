@@ -92,7 +92,8 @@ fun AlarmNameDialog(
                 },
                 textStyle = TextStyle(fontFamily = Roboto, fontSize = 14.sp),
                 colors = TextFieldDefaults.textFieldColors(
-                    textColor = Color.White,
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White,
                     containerColor = Color(0xFF353535),
                     focusedIndicatorColor = Color.Transparent,
                     errorIndicatorColor = Color.Transparent,

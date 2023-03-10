@@ -10,5 +10,6 @@ data class AlarmModel(
     val alarmVolume: Float,
     val isVibrationEnabled: Boolean,
     val isAlarmEnabled: Boolean,
-    val gradientTag: String
+    val gradientTag: String,
+    val createdAt: Long
 )

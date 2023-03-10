@@ -13,7 +13,7 @@ sealed class Gender(val tag: String, @DrawableRes val icon: Int) {
         fun ofTag(tag: String): Gender = when(tag) {
             Male.tag -> Male
             Female.tag -> Female
-            else -> throw IllegalArgumentException("There are only two genders")
+            else -> Male
         }
     }
 }

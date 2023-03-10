@@ -12,8 +12,6 @@ class DeleteAlarm @Inject constructor(
 
     suspend operator fun invoke(alarmModel: AlarmModel) {
         alarmsRepository.deleteAlarm(alarmId = alarmModel.alarmId)
-
-        applicationUtil.removeAlarm(alarmModel = alarmModel)
     }
 
 }

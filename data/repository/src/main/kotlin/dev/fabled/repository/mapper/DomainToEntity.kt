@@ -12,5 +12,6 @@ fun AlarmModel.toAlarmEntity() = AlarmEntity(
     alarmVolume = alarmVolume,
     isVibrationEnabled = isVibrationEnabled,
     isAlarmEnabled = isAlarmEnabled,
-    alarmGradientTag = gradientTag
+    alarmGradientTag = gradientTag,
+    createdAt = createdAt
 )

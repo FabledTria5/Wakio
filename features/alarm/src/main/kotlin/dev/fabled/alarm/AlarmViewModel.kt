@@ -6,8 +6,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.fabled.alarm.model.AlarmSoundModel
 import dev.fabled.alarm.model.AlarmUiModel
+import dev.fabled.alarm.utils.AlarmUtil
+import dev.fabled.alarm.utils.toDomainModel
 import dev.fabled.alarm.utils.toUiModel
-import dev.fabled.domain.model.AlarmModel
 import dev.fabled.domain.model.Resource
 import dev.fabled.domain.use_cases.alarms.CreateNewAlarm
 import dev.fabled.domain.use_cases.alarms.DeleteAlarm
@@ -30,10 +31,11 @@ import javax.inject.Inject
 @HiltViewModel
 @Stable
 class AlarmViewModel @Inject constructor(
+    getAlarmList: GetAlarmList,
     private val navigator: Navigator,
+    private val alarmUtil: AlarmUtil,
     private val createNewAlarm: CreateNewAlarm,
-    private val deleteAlarm: DeleteAlarm,
-    getAlarmList: GetAlarmList
+    private val deleteAlarm: DeleteAlarm
 ) : ViewModel(), Navigator by navigator {
 
     private val _alarmsList = MutableStateFlow<List<AlarmUiModel>>(emptyList())
@@ -96,31 +98,20 @@ class AlarmViewModel @Inject constructor(
     fun saveAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
             val alarmUiModel = _selectedAlarm.value
+            val alarmModel = alarmUiModel.toDomainModel()
 
-            createNewAlarm(
-                alarmModel = AlarmModel(
-                    alarmId = alarmUiModel.alarmId,
-                    alarmName = alarmUiModel.alarmName.value,
-                    alarmHour = alarmUiModel.alarmTime.value.hours,
-                    alarmMinute = alarmUiModel.alarmTime.value.minutes,
-                    alarmDays = alarmUiModel.alarmDays
-                        .filter { it.isChecked.value }
-                        .map { it.dayOfWeekNumber },
-                    alarmSoundTag = alarmUiModel.alarmSoundModel.value.tag,
-                    alarmVolume = alarmUiModel.alarmVolume.value,
-                    isVibrationEnabled = alarmUiModel.isVibrating.value,
-                    isAlarmEnabled = true,
-                    gradientTag = alarmUiModel.gradientUiModel.value.tag
-                )
-            ).collect { result ->
+            createNewAlarm(alarmModel).collect { result ->
                 when (result) {
-                    Resource.Completed -> navigateUp()
+                    is Resource.Completed -> {
+                        alarmUtil.setupAlarm(alarmModel)
+                        navigateUp()
+                    }
+
                     is Resource.Error -> {
                         Timber.e(result.error)
                         navigateUp()
                     }
 
-                    Resource.Loading -> Timber.d("Loading")
                     else -> Unit
                 }
             }
@@ -129,22 +120,10 @@ class AlarmViewModel @Inject constructor(
 
     fun removeAlarm(alarmUiModel: AlarmUiModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            deleteAlarm(
-                alarmModel = AlarmModel(
-                    alarmId = alarmUiModel.alarmId,
-                    alarmName = alarmUiModel.alarmName.value,
-                    alarmHour = alarmUiModel.alarmTime.value.hours,
-                    alarmMinute = alarmUiModel.alarmTime.value.minutes,
-                    alarmDays = alarmUiModel.alarmDays
-                        .filter { it.isChecked.value }
-                        .map { it.dayOfWeekNumber },
-                    alarmSoundTag = alarmUiModel.alarmSoundModel.value.tag,
-                    alarmVolume = alarmUiModel.alarmVolume.value,
-                    isVibrationEnabled = alarmUiModel.isVibrating.value,
-                    isAlarmEnabled = true,
-                    gradientTag = alarmUiModel.gradientUiModel.value.tag
-                )
-            )
+            val alarmModel = alarmUiModel.toDomainModel()
+
+            deleteAlarm(alarmModel)
+            alarmUtil.removeAlarm(alarmModel)
         }
     }
 

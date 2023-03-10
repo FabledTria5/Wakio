@@ -54,6 +54,8 @@ dependencies {
     implementation(dependencyNotation = Dependencies.uiUtil)
     coreLibraryDesugaring(dependencyNotation = Dependencies.desugar)
 
+    implementation(dependencyNotation = Dependencies.systemUiController)
+
     // Dagger Hilt
     implementation(dependencyNotation = Dependencies.hiltAndroid)
     kapt(dependencyNotation = Dependencies.hiltCompiler)

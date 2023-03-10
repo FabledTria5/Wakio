@@ -53,7 +53,8 @@ internal fun EmailTextField(
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.White,
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
             disabledTextColor = Color.White,
             containerColor = TextFieldsColor,
             cursorColor = PrimaryDark,
@@ -88,7 +89,8 @@ internal fun UsernameTextField(
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.White,
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
             disabledTextColor = Color.White,
             containerColor = TextFieldsColor,
             cursorColor = PrimaryDark,
@@ -140,7 +142,8 @@ internal fun PasswordTextField(
             }
         },
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.White,
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
             disabledTextColor = Color.White,
             containerColor = TextFieldsColor,
             cursorColor = PrimaryDark,

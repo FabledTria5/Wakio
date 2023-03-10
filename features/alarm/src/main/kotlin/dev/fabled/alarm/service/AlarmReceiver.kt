@@ -7,29 +7,27 @@ import timber.log.Timber
 
 class AlarmReceiver : BroadcastReceiver() {
 
-    companion object {
-        const val ACTION = "dev.fabled.alarm.broadcast"
-    }
-
-    override fun onReceive(content: Context, intent: Intent?) {
+    override fun onReceive(context: Context, intent: Intent?) {
         Timber.d("Receiver starts...")
 
-        val serviceIntent = Intent(content, AlarmService::class.java).apply {
+        val serviceIntent = Intent(context, AlarmService::class.java).apply {
             putExtra(
                 AlarmService.ALARM_SOUND_TAG,
                 intent?.getStringExtra(AlarmService.ALARM_SOUND_TAG).orEmpty()
             )
             putExtra(
                 AlarmService.ALARM_VOLUME,
-                intent?.getStringExtra(AlarmService.ALARM_VOLUME).orEmpty()
+                intent?.getFloatExtra(AlarmService.ALARM_VOLUME, .5f)
             )
             putExtra(
                 AlarmService.IS_VIBRATION_ENABLED,
-                intent?.getStringExtra(AlarmService.IS_VIBRATION_ENABLED).orEmpty()
+                intent?.getBooleanExtra(AlarmService.IS_VIBRATION_ENABLED, true)
             )
         }
 
-        content.startService(serviceIntent)
+        context.startForegroundService(serviceIntent)
+
+        Timber.d("Receiver work ends")
     }
 
 }

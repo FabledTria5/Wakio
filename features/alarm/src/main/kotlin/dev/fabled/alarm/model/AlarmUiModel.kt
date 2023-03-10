@@ -10,6 +10,7 @@ import java.time.LocalDate
 @Stable
 data class AlarmUiModel(
     val alarmId: Int = -1,
+    val creationTime: Long = System.currentTimeMillis(),
     val alarmName: MutableState<String> = mutableStateOf(value = "New Alarm"),
     val alarmTime: MutableState<TimeModel> = mutableStateOf(TimeModel()),
     val alarmDays: SnapshotStateList<DayUiModel> = mutableStateListOf<DayUiModel>().apply {
