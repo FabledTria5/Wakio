@@ -24,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
@@ -64,7 +63,6 @@ import dev.fabled.common.ui.theme.PrimaryGradient
 import dev.fabled.common.ui.theme.Roboto
 import dev.fabled.navigation.navigation_directions.AlarmDirections
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewModel) {
     val selectedAlarm by alarmViewModel.selectedAlarm.collectAsStateWithLifecycle()
@@ -207,7 +205,8 @@ fun AlarmNameEdit(alarmName: String, onEditAlarmClick: () -> Unit) {
     ) {
         AnimatedContent(
             targetState = alarmName,
-            transitionSpec = { fadeIn() with fadeOut() }
+            transitionSpec = { fadeIn() with fadeOut() },
+            label = "alarm_name_animation_label"
         ) {
             Text(
                 text = alarmName.ifEmpty { stringResource(id = R.string.alarm_name) },
@@ -233,7 +232,10 @@ fun RepeatModeSelector(
 ) {
     var isRepeatOptionOpened by rememberSaveable { mutableStateOf(value = true) }
 
-    val iconRotation by animateFloatAsState(targetValue = if (isRepeatOptionOpened) 0f else -90f)
+    val iconRotation by animateFloatAsState(
+        targetValue = if (isRepeatOptionOpened) 0f else -90f,
+        label = "icon_rotation_animation_label"
+    )
 
     Column(modifier = modifier.animateContentSize()) {
         Row(

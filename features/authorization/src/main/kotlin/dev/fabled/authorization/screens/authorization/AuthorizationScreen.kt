@@ -1,10 +1,12 @@
 package dev.fabled.authorization.screens.authorization
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -25,9 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import dev.fabled.authorization.AuthorizationViewModel
 import dev.fabled.authorization.R
 import dev.fabled.authorization.components.AuthorizationIndication
@@ -37,8 +36,8 @@ import dev.fabled.authorization.util.TestTags
 import dev.fabled.common.ui.theme.Oxygen
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AuthorizationScreen(
     modifier: Modifier = Modifier,
@@ -60,7 +59,7 @@ fun AuthorizationScreen(
     ) {
         HorizontalPager(
             modifier = modifier,
-            count = 2,
+            pageCount = 2,
             state = pagerState,
             userScrollEnabled = false
         ) { page ->

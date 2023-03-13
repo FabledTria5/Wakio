@@ -1,10 +1,12 @@
 package dev.fabled.authorization.screens.setup
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -24,9 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import dev.fabled.authorization.AuthorizationViewModel
 import dev.fabled.authorization.components.AuthorizationIndication
 import dev.fabled.authorization.screens.setup.pages.GenderPage
@@ -35,14 +34,14 @@ import dev.fabled.common.ui.theme.Oxygen
 import dev.fabled.common.ui.theme.PrimaryMuted
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SetupScreen(modifier: Modifier = Modifier, authorizationViewModel: AuthorizationViewModel) {
     val authorizationState by authorizationViewModel.authorizationState.collectAsStateWithLifecycle()
     val setupState by authorizationViewModel.setupState.collectAsStateWithLifecycle()
 
-    val pagerState = rememberPagerState(initialPage = 0)
+    val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -51,13 +50,12 @@ fun SetupScreen(modifier: Modifier = Modifier, authorizationViewModel: Authoriza
     Scaffold(modifier = modifier, snackbarHost = { SnackbarHost(snackBarHostState) }) {
         Column(modifier = modifier.padding(horizontal = 15.dp, vertical = 20.dp)) {
             SetupTopBar()
-
             HorizontalPager(
                 modifier = Modifier.fillMaxSize(),
-                count = 2,
+                pageCount = 2,
                 state = pagerState,
                 userScrollEnabled = false,
-                itemSpacing = 15.dp
+                pageSpacing = 15.dp
             ) { page ->
                 when (page) {
                     0 -> GenderPage(

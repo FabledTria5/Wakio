@@ -58,7 +58,6 @@ dependencies {
     // Core
     implementation(dependencyNotation = Dependencies.kotlinCoreKtx)
     implementation(dependencyNotation = Dependencies.constraintLayout)
-    implementation(dependencyNotation = Dependencies.pager)
     implementation(dependencyNotation = Dependencies.googleAuthentication)
     coreLibraryDesugaring(dependencyNotation = Dependencies.desugar)
 

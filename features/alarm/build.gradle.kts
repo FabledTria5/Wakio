@@ -50,7 +50,6 @@ dependencies {
     // Core
     implementation(dependencyNotation = Dependencies.kotlinCoreKtx)
     implementation(dependencyNotation = Dependencies.constraintLayout)
-    implementation(dependencyNotation = Dependencies.pager)
     implementation(dependencyNotation = Dependencies.uiUtil)
     coreLibraryDesugaring(dependencyNotation = Dependencies.desugar)
 

@@ -1,11 +1,16 @@
 package dev.fabled.alarm.components
 
 import androidx.compose.animation.Animatable
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.PagerDefaults
+import androidx.compose.foundation.pager.PagerSnapDistance
+import androidx.compose.foundation.pager.VerticalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,13 +27,9 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.VerticalPager
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
-import com.google.accompanist.pager.rememberPagerState
 import dev.fabled.alarm.model.TimeModel
 import dev.fabled.common.ui.theme.BackgroundColor
-import kotlin.math.absoluteValue
+import dev.fabled.common.ui.utils.calculateCurrentOffsetForPage
 
 @Composable
 fun TimeCarousel(
@@ -84,7 +85,7 @@ fun TimeCarousel(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PickerCarousel(
     modifier: Modifier = Modifier,
@@ -96,6 +97,11 @@ fun PickerCarousel(
 ) {
     val pagerState = rememberPagerState(initialItem)
     val elementsColor = remember { Animatable(initialValue = activeElementColor) }
+
+    val fling = PagerDefaults.flingBehavior(
+        state = pagerState,
+        pagerSnapDistance = PagerSnapDistance.atMost(5)
+    )
 
     LaunchedEffect(key1 = pagerState.isScrollInProgress) {
         if (pagerState.isScrollInProgress) {
@@ -113,13 +119,14 @@ fun PickerCarousel(
 
     VerticalPager(
         modifier = modifier,
-        count = items.size,
+        pageCount = items.size,
         contentPadding = PaddingValues(vertical = 90.dp),
-        state = pagerState
-    ) {
+        state = pagerState,
+        flingBehavior = fling
+    ) { page ->
         Text(
             modifier = Modifier.graphicsLayer {
-                val pageOffset = calculateCurrentOffsetForPage(it).absoluteValue
+                val pageOffset = pagerState.calculateCurrentOffsetForPage(page)
                 lerp(
                     start = .6f,
                     stop = 1f,
@@ -129,8 +136,8 @@ fun PickerCarousel(
                     scaleY = scale
                 }
             },
-            text = items[it],
-            color = if (pagerState.currentPage == it) activeElementColor else elementsColor.value,
+            text = items[page],
+            color = if (pagerState.currentPage == page) activeElementColor else elementsColor.value,
             fontSize = textSize
         )
     }
