@@ -21,9 +21,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Wakio"
+        android:theme="@style/Theme.App.MySplash"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <profileable android:shell="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -47,7 +49,11 @@
             android:name="dev.fabled.alarm.service.AlarmReceiver"
             android:enabled="true"
             android:exported="true"
-            tools:ignore="ExportedReceiver" />
+            tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="dev.fabled.wakio.RECEIVE_ALARM" />
+            </intent-filter>
+        </receiver>
 
         <service
             android:name="dev.fabled.alarm.service.AlarmService"

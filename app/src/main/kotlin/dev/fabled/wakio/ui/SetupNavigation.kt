@@ -5,6 +5,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -29,8 +32,11 @@ import dev.fabled.navigation.navigation_core.Navigator
 import dev.fabled.navigation.navigation_core.NavigatorEvent
 import dev.fabled.navigation.navigation_directions.BottomNavigationDestinations
 import dev.fabled.navigation.navigation_directions.StartUpDirections
+import dev.fabled.wakio.navigation.activityGraph
+import dev.fabled.wakio.navigation.alarmGraph
 import dev.fabled.wakio.navigation.authorizationGraph
-import dev.fabled.wakio.navigation.primaryGraph
+import dev.fabled.wakio.navigation.homeGraph
+import dev.fabled.wakio.navigation.profileDirections
 import dev.fabled.wakio.navigation.startUpGraph
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -40,7 +46,9 @@ fun SetupNavigation(navigator: Navigator) {
     val navHostController = rememberAnimatedNavController()
     val currentBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentDestinationRoute =
-        currentBackStackEntry?.destination?.route ?: StartUpDirections.SplashScreen.route()
+        currentBackStackEntry?.destination?.route ?: StartUpDirections.OnBoarding.route()
+
+    val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
 
     val navigationDestination = navigator.destinations
 
@@ -58,8 +66,6 @@ fun SetupNavigation(navigator: Navigator) {
         }
     }
 
-    val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -70,11 +76,15 @@ fun SetupNavigation(navigator: Navigator) {
     ) {
         AnimatedNavHost(
             navController = navHostController,
-            startDestination = "primary_directions"
+            startDestination = "stab"
         ) {
+            composable(route = "stab") { Box(modifier = Modifier.fillMaxSize()) }
             startUpGraph()
             authorizationGraph(viewModelStoreOwner = viewModelStoreOwner)
-            primaryGraph(viewModelStoreOwner = viewModelStoreOwner)
+            homeGraph(viewModelStoreOwner = viewModelStoreOwner)
+            activityGraph(viewModelStoreOwner = viewModelStoreOwner)
+            alarmGraph(viewModelStoreOwner = viewModelStoreOwner)
+            profileDirections(viewModelStoreOwner = viewModelStoreOwner)
         }
     }
 }

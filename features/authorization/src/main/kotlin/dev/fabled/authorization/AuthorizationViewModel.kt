@@ -58,7 +58,7 @@ class AuthorizationViewModel @Inject constructor(
         navigator.navigate(
             route = HomeDirections.HomeScreen.route(),
             builder = {
-                popUpTo(AuthorizationDirections.SetupScreen.route()) {
+                popUpTo(AuthorizationDirections.AUTHORIZATION_DIRECTION) {
                     inclusive = true
                 }
             }

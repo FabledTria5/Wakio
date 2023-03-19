@@ -4,6 +4,8 @@ import dev.fabled.navigation.navigation_core.NavigationDestination
 
 object AlarmDirections {
 
+    const val ALARM_DIRECTION = "alarm_direction"
+
     object AlarmsScreen : NavigationDestination {
 
         override fun route(): String = ALARMS_BOTTOM_DESTINATION_ROUTE

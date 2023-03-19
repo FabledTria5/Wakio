@@ -4,18 +4,21 @@
     android:height="15dp"
     android:viewportWidth="18"
     android:viewportHeight="15">
-  <path
-      android:pathData="M17.738,0.914L14.785,14.394H9.043L13.09,0.914H17.738ZM9.535,0.914L6.801,14.394H0.813L5.188,0.914H9.535Z">
-    <aapt:attr name="android:fillColor">
-      <gradient 
-          android:startX="-0.34"
-          android:startY="-20"
-          android:endX="32.939"
-          android:endY="-15.158"
-          android:type="linear">
-        <item android:offset="0" android:color="#FFC847F4"/>
-        <item android:offset="1" android:color="#FF6E54F7"/>
-      </gradient>
-    </aapt:attr>
-  </path>
+    <path android:pathData="M17.738,0.914L14.785,14.394H9.043L13.09,0.914H17.738ZM9.535,0.914L6.801,14.394H0.813L5.188,0.914H9.535Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="32.939"
+                android:endY="-15.158"
+                android:startX="-0.34"
+                android:startY="-20"
+                android:type="linear">
+                <item
+                    android:color="#FFC847F4"
+                    android:offset="0" />
+                <item
+                    android:color="#FF6E54F7"
+                    android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
 </vector>

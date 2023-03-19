@@ -19,7 +19,7 @@ sealed class BottomNavigationDestinations(
     object Activity : BottomNavigationDestinations(
         selectedIcon = R.drawable.ic_activity_selected,
         unselectedIcon = R.drawable.ic_activity_unselected,
-        direction = PrimaryDirections.ActivityScreen
+        direction = ActivityDirections.ActivityScreen
     )
 
     object Alarm : BottomNavigationDestinations(
@@ -31,7 +31,7 @@ sealed class BottomNavigationDestinations(
     object Profile : BottomNavigationDestinations(
         selectedIcon = R.drawable.ic_profile_selected,
         unselectedIcon = R.drawable.ic_profile_unselected,
-        direction = PrimaryDirections.ProfileScreen
+        direction = ProfileDirections.ProfileScreen
     )
 
     companion object {

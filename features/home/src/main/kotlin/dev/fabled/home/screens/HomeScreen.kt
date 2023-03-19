@@ -68,7 +68,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import dev.fabled.common.ui.theme.BackgroundColor
 import dev.fabled.common.ui.theme.LightRed
 import dev.fabled.common.ui.theme.OrangeGradient
 import dev.fabled.common.ui.theme.Oxygen
@@ -163,8 +162,6 @@ private fun HomeTopBar(
         .data(welcomeData.userGender?.icon)
         .placeholder(ColorDrawable(0xFF212327.toInt()))
         .build()
-
-    BackgroundColor
 
     val painter = rememberAsyncImagePainter(model = imageRequest)
 

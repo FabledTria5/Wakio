@@ -4,6 +4,7 @@ import dev.fabled.domain.model.AlarmModel
 import dev.fabled.domain.model.DefaultErrors
 import dev.fabled.domain.model.Resource
 import dev.fabled.domain.repository.AlarmsRepository
+import dev.fabled.domain.utils.AlarmUtil
 import dev.fabled.domain.utils.ApplicationUtil
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
@@ -11,6 +12,7 @@ import javax.inject.Inject
 
 class CreateNewAlarm @Inject constructor(
     private val applicationUtil: ApplicationUtil,
+    private val alarmUtil: AlarmUtil,
     private val alarmsRepository: AlarmsRepository
 ) {
     suspend operator fun invoke(alarmModel: AlarmModel) = flow {
@@ -20,6 +22,8 @@ class CreateNewAlarm @Inject constructor(
             createAndSyncNewAlarm(alarmModel)
         else
             createAlarmOffline(alarmModel)
+
+        alarmUtil.setAlarm(alarmModel)
 
         emit(alarmCreationResult)
     }
@@ -37,7 +41,7 @@ class CreateNewAlarm @Inject constructor(
         } else {
             val nextDepth = depth + 1
             createAlarmOffline(
-                alarmModel = alarmModel.copy(alarmName = "${alarmModel.alarmName}${nextDepth}"),
+                alarmModel = alarmModel.copy(alarmName = "${alarmModel.alarmName}(${nextDepth})"),
                 depth = nextDepth
             )
         }

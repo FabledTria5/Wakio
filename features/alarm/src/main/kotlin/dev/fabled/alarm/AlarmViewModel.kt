@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.fabled.alarm.model.AlarmSoundModel
 import dev.fabled.alarm.model.AlarmUiModel
-import dev.fabled.alarm.utils.AlarmUtil
 import dev.fabled.alarm.utils.toDomainModel
 import dev.fabled.alarm.utils.toUiModel
 import dev.fabled.domain.model.Resource
@@ -33,7 +32,6 @@ import javax.inject.Inject
 class AlarmViewModel @Inject constructor(
     getAlarmList: GetAlarmList,
     private val navigator: Navigator,
-    private val alarmUtil: AlarmUtil,
     private val createNewAlarm: CreateNewAlarm,
     private val deleteAlarm: DeleteAlarm
 ) : ViewModel(), Navigator by navigator {
@@ -65,22 +63,22 @@ class AlarmViewModel @Inject constructor(
     }
 
     fun updateHours(hours: Int) {
-        _selectedAlarm.value.alarmTime.value =
-            _selectedAlarm.value.alarmTime.value.copy(hours = hours)
+        val selectedAlarm = _selectedAlarm.value
 
-        Timber.e(_selectedAlarm.value.alarmTime.value.toString())
+        selectedAlarm.alarmTime.value = selectedAlarm.alarmTime.value.copy(hours = hours)
     }
 
     fun updateMinutes(minutes: Int) {
-        _selectedAlarm.value.alarmTime.value =
-            _selectedAlarm.value.alarmTime.value.copy(minutes = minutes)
+        val selectedAlarm = _selectedAlarm.value
 
-        Timber.e(_selectedAlarm.value.alarmTime.value.toString())
+        selectedAlarm.alarmTime.value = selectedAlarm.alarmTime.value.copy(minutes = minutes)
     }
 
     fun onDaySelected(index: Int) {
-        val isDaySelected = _selectedAlarm.value.alarmDays[index].isChecked.value
-        _selectedAlarm.value.alarmDays[index].isChecked.value = !isDaySelected
+        val selectedAlarm = _selectedAlarm.value
+
+        val isDaySelected = selectedAlarm.alarmDays[index].isChecked.value
+        selectedAlarm.alarmDays[index].isChecked.value = !isDaySelected
     }
 
     fun updateAlarmSound(newSound: AlarmSoundModel) {
@@ -100,18 +98,10 @@ class AlarmViewModel @Inject constructor(
             val alarmUiModel = _selectedAlarm.value
             val alarmModel = alarmUiModel.toDomainModel()
 
-            createNewAlarm(alarmModel).collect { result ->
-                when (result) {
-                    is Resource.Completed -> {
-                        alarmUtil.setupAlarm(alarmModel)
-                        navigateUp()
-                    }
-
-                    is Resource.Error -> {
-                        Timber.e(result.error)
-                        navigateUp()
-                    }
-
+            createNewAlarm(alarmModel).collect { resource ->
+                when(resource) {
+                    Resource.Completed -> navigateUp()
+                    is Resource.Error -> Timber.e(resource.error)
                     else -> Unit
                 }
             }
@@ -123,7 +113,6 @@ class AlarmViewModel @Inject constructor(
             val alarmModel = alarmUiModel.toDomainModel()
 
             deleteAlarm(alarmModel)
-            alarmUtil.removeAlarm(alarmModel)
         }
     }
 

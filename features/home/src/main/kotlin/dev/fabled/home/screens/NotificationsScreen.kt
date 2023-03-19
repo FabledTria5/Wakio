@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.fabled.common.ui.theme.BackgroundColor
 import dev.fabled.common.ui.theme.Oxygen
 import dev.fabled.home.HomeViewModel
 
@@ -36,38 +39,40 @@ import dev.fabled.home.HomeViewModel
 fun NotificationsScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) {
     val notifications by homeViewModel.notificationsCount.collectAsStateWithLifecycle()
 
-    Column(modifier = modifier) {
-        Box(
-            modifier = Modifier
-                .padding(top = 30.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = "Notifications",
-                color = Color.White,
-                fontFamily = Oxygen,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp
-            )
-            IconButton(
-                modifier = Modifier.align(Alignment.CenterEnd),
-                onClick = homeViewModel::navigateUp
+    Surface(modifier = Modifier.fillMaxSize(), color = BackgroundColor) {
+        Column(modifier = modifier) {
+            Box(
+                modifier = Modifier
+                    .padding(top = 30.dp)
+                    .fillMaxWidth()
             ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Icon close",
-                    tint = Color.White
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "Notifications",
+                    color = Color.White,
+                    fontFamily = Oxygen,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 24.sp
                 )
+                IconButton(
+                    modifier = Modifier.align(Alignment.CenterEnd),
+                    onClick = homeViewModel::navigateUp
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Icon close",
+                        tint = Color.White
+                    )
+                }
             }
-        }
-        LazyColumn(
-            modifier = Modifier.padding(start = 15.dp, top = 20.dp, end = 15.dp),
-            verticalArrangement = Arrangement.spacedBy(15.dp),
-            contentPadding = PaddingValues(vertical = 5.dp)
-        ) {
-            items(notifications) {
-                NotificationsListItem()
+            LazyColumn(
+                modifier = Modifier.padding(start = 15.dp, top = 20.dp, end = 15.dp),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                contentPadding = PaddingValues(vertical = 5.dp)
+            ) {
+                items(notifications) {
+                    NotificationsListItem()
+                }
             }
         }
     }

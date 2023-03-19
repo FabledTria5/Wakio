@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id(Plugins.application)
     kotlin(Plugins.android)
@@ -6,7 +9,21 @@ plugins {
     id(Plugins.googleServices)
 }
 
+val keyStorePropertiesFile = rootProject.file("keystore.properties")
+
+val keyStoreProperties = Properties()
+
+keyStoreProperties.load(FileInputStream(keyStorePropertiesFile))
+
 android {
+    signingConfigs {
+        create("release") {
+            keyAlias = keyStoreProperties.getProperty("keyAlias") as String
+            storeFile = file(keyStoreProperties.getProperty("storeFile") as String)
+            storePassword = keyStoreProperties.getProperty("storePassword") as String
+            keyPassword = keyStoreProperties.getProperty("keyPassword") as String
+        }
+    }
     compileSdk = Config.compileSdk
 
     defaultConfig {
@@ -25,12 +42,21 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             isDebuggable = false
             isRenderscriptDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
+        }
+
+        create("benchmark") {
+            initWith(getByName("release"))
+            signingConfig = signingConfigs.getByName("debug")
+
+            matchingFallbacks += listOf("release")
         }
     }
 
@@ -65,7 +91,6 @@ dependencies {
     implementation(project(":data:repository"))
     implementation(project(":domain"))
     implementation(project(":common"))
-    implementation(project(":features:splash"))
     implementation(project(":features:on_boarding"))
     implementation(project(":features:authorization"))
     implementation(project(":features:home"))
@@ -75,6 +100,8 @@ dependencies {
     // Core
     implementation(dependencyNotation = Dependencies.kotlinCoreKtx)
     coreLibraryDesugaring(dependencyNotation = Dependencies.desugar)
+
+    implementation(dependencyNotation = "androidx.core:core-splashscreen:1.0.0")
 
     // Accompanist
     implementation(dependencyNotation = Dependencies.systemUiController)

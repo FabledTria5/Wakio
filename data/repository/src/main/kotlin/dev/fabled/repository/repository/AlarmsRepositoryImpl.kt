@@ -25,7 +25,7 @@ class AlarmsRepositoryImpl @Inject constructor(
     override suspend fun createNewAlarmOffline(alarmModel: AlarmModel) {
         val alarmEntity = alarmModel.toAlarmEntity()
 
-        return alarmsDao.insertAlarm(alarmEntity)
+        alarmsDao.insertAlarm(alarmEntity)
     }
 
     override suspend fun deleteAlarm(alarmId: Int) = alarmsDao.deleteAlarm(alarmId)

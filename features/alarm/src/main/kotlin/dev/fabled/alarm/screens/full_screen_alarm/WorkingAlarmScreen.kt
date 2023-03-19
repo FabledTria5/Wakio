@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.fabled.alarm.R
@@ -28,15 +29,16 @@ import dev.fabled.common.ui.components.GifImage
 import dev.fabled.common.ui.theme.Oxygen
 import dev.fabled.common.ui.theme.Roboto
 import dev.fabled.common.ui.theme.WakioTheme
-import java.util.Calendar
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun WorkingAlarmScreen(onCloseScreenClicked: () -> Unit) {
     val currentTime by remember {
         derivedStateOf {
-            val calendar = Calendar.getInstance()
+            val localDate = LocalDateTime.now()
 
-            "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
+            localDate.format(DateTimeFormatter.ofPattern("HH:mm"))
         }
     }
 
@@ -85,6 +87,7 @@ fun WorkingAlarmScreen(onCloseScreenClicked: () -> Unit) {
     }
 }
 
+@Preview
 @Composable
 fun WorkingAlarmScreenPrev() {
     WakioTheme {

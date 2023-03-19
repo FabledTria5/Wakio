@@ -4,6 +4,8 @@ import dev.fabled.navigation.navigation_core.NavigationDestination
 
 object HomeDirections {
 
+    const val HOME_DIRECTION = "home_direction"
+
     object HomeScreen : NavigationDestination {
 
         override fun route(): String = HOME_BOTTOM_DESTINATION_ROUTE

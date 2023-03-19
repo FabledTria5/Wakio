@@ -12,7 +12,7 @@ import dev.fabled.domain.use_cases.articles.GetDailyArticle
 import dev.fabled.home.model.UiArticle
 import dev.fabled.home.model.WelcomeData
 import dev.fabled.navigation.navigation_core.Navigator
-import dev.fabled.navigation.navigation_directions.PrimaryDirections
+import dev.fabled.navigation.navigation_directions.ActivityDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -107,7 +107,7 @@ class HomeViewModel @Inject constructor(
         .launchIn(viewModelScope)
 
     fun openUserStats() {
-        navigator.navigate(PrimaryDirections.ActivityScreen.route())
+        navigator.navigate(ActivityDirections.ActivityScreen.route())
     }
 
 }

@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.fabled.domain.repository.AppPreferencesRepository
 import dev.fabled.navigation.navigation_core.Navigator
 import dev.fabled.navigation.navigation_directions.AuthorizationDirections
+import dev.fabled.navigation.navigation_directions.StartUpDirections
 import dev.fabled.on_boarding.model.OnBoardingPage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,7 +36,14 @@ class OnBoardingViewModel @Inject constructor(
     private fun openAuthorizationScreen() = viewModelScope.launch {
         appPreferencesRepository.persistLaunchState()
 
-        navigator.navigate(AuthorizationDirections.AuthorizationScreen.route())
+        navigator.navigate(
+            route = AuthorizationDirections.AuthorizationScreen.route(),
+            builder = {
+                popUpTo(StartUpDirections.START_UP_DIRECTION) {
+                    inclusive = true
+                }
+            }
+        )
     }
 
 }

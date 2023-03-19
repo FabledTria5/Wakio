@@ -4,6 +4,8 @@ import dev.fabled.navigation.navigation_core.NavigationDestination
 
 object AuthorizationDirections {
 
+    const val AUTHORIZATION_DIRECTION = "authorization_direction"
+
     object AuthorizationScreen : NavigationDestination {
 
         override val isInclusive: Boolean = true

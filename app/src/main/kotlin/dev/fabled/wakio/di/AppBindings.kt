@@ -10,16 +10,18 @@ import dev.fabled.domain.repository.ArticlesRepository
 import dev.fabled.domain.repository.AuthorizationRepository
 import dev.fabled.domain.repository.ErrorsRepository
 import dev.fabled.domain.repository.QuotesRepository
+import dev.fabled.domain.utils.AlarmUtil
 import dev.fabled.domain.utils.ApplicationUtil
 import dev.fabled.navigation.navigation_core.Navigator
 import dev.fabled.navigation.navigation_core.NavigatorImpl
+import dev.fabled.repository.android_utils.AndroidAlarmUtil
+import dev.fabled.repository.android_utils.AndroidApplicationUtil
 import dev.fabled.repository.preferences.AppPreferencesRepositoryImpl
 import dev.fabled.repository.repository.AlarmsRepositoryImpl
 import dev.fabled.repository.repository.ArticlesRepositoryImpl
 import dev.fabled.repository.repository.AuthorizationRepositoryImpl
 import dev.fabled.repository.repository.ErrorsRepositoryImpl
 import dev.fabled.repository.repository.QuotesRepositoryImpl
-import dev.fabled.repository.utils.AndroidApplicationUtil
 import javax.inject.Singleton
 
 @Module
@@ -57,5 +59,9 @@ interface SingletonBindings {
     @Binds
     @Singleton
     fun bindAppUtil(applicationUtil: AndroidApplicationUtil): ApplicationUtil
+
+    @Binds
+    @Singleton
+    fun bindAlarmUtil(androidAlarmUtil: AndroidAlarmUtil): AlarmUtil
 
 }

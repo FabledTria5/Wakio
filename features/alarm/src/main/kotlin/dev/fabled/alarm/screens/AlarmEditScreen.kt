@@ -68,7 +68,8 @@ fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewMode
     val selectedAlarm by alarmViewModel.selectedAlarm.collectAsStateWithLifecycle()
 
     var isAlarmNameDialogVisible by rememberSaveable { mutableStateOf(value = false) }
-    val canSaveAlarm by remember {
+
+    val canSaveAlarm by remember(selectedAlarm.alarmDays) {
         derivedStateOf {
             selectedAlarm.alarmDays.any { it.isChecked.value }
         }
@@ -146,6 +147,7 @@ fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewMode
                 .height(240.dp)
                 .clip(RoundedCornerShape(16.dp)),
             onDismiss = { isAlarmNameDialogVisible = false },
+            alarmName = selectedAlarm.alarmName.value,
             onSaveAlarmName = onUpdateAlarmName
         )
 }
