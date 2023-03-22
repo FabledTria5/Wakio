@@ -53,6 +53,9 @@ dependencies {
     implementation(dependencyNotation = Dependencies.constraintLayout)
     coreLibraryDesugaring(dependencyNotation = Dependencies.desugar)
 
+    // Accompanist
+    implementation(Dependencies.webView)
+
     // Dagger Hilt
     implementation(dependencyNotation = Dependencies.hiltAndroid)
     kapt(dependencyNotation = Dependencies.hiltCompiler)

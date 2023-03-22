@@ -58,6 +58,7 @@ object Versions {
     const val jUnit_version = "4.13.2"
     const val android_jUnit_version = "1.1.5"
     const val espresso_core_version = "3.5.1"
+    const val junitBom = "5.9.2"
 
     // Timber
     const val timber_version = "5.0.1"
@@ -148,6 +149,7 @@ object Dependencies {
         "com.google.accompanist:accompanist-flowlayout:${Versions.accompanist_version}"
     const val permissions =
         "com.google.accompanist:accompanist-permissions:${Versions.accompanist_version}"
+    const val webView = "com.google.accompanist:accompanist-webview:${Versions.accompanist_version}"
 
     // Dagger Hilt
     const val hiltAndroid = "com.google.dagger:hilt-android:${Versions.hilt_android_version}"
@@ -178,6 +180,10 @@ object Dependencies {
     const val androidJunit = "androidx.test.ext:junit:${Versions.android_jUnit_version}"
     const val espressoCore =
         "androidx.test.espresso:espresso-core:${Versions.espresso_core_version}"
+
+    const val junit5 = "test-junit5"
+    const val junitPlatform = "org.junit:junit-bom:${Versions.junitBom}"
+    const val jupiter = "org.junit.jupiter:junit-jupiter"
 
     // Logging
     const val timber = "com.jakewharton.timber:timber:${Versions.timber_version}"

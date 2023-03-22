@@ -18,14 +18,10 @@ class CreateNewAlarm @Inject constructor(
     suspend operator fun invoke(alarmModel: AlarmModel) = flow {
         emit(Resource.Loading)
 
-        val alarmCreationResult = if (!applicationUtil.isInternetAvailable())
-            createAndSyncNewAlarm(alarmModel)
-        else
-            createAlarmOffline(alarmModel)
-
+        val creationResult = createAlarmOffline(alarmModel)
         alarmUtil.setAlarm(alarmModel)
 
-        emit(alarmCreationResult)
+        emit(creationResult)
     }
 
     private suspend fun createAlarmOffline(
@@ -36,7 +32,7 @@ class CreateNewAlarm @Inject constructor(
             alarmsRepository.checkUniqueAlarmName(alarmName = alarmModel.alarmName)
 
         if (!isAlarmExists) {
-            alarmsRepository.createNewAlarmOffline(alarmModel)
+            alarmsRepository.createNewAlarm(alarmModel)
             return Resource.Completed
         } else {
             val nextDepth = depth + 1

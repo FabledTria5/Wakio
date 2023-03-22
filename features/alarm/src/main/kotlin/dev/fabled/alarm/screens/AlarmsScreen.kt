@@ -1,6 +1,5 @@
 package dev.fabled.alarm.screens
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -65,8 +64,6 @@ fun AlarmsScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewModel) 
     val alarmsList by alarmViewModel.alarmsList.collectAsStateWithLifecycle()
 
     var isEditing by remember { mutableStateOf(value = false) }
-
-    BackHandler(onBack = alarmViewModel::navigateUp)
 
     Scaffold(
         modifier = modifier.padding(horizontal = 15.dp, vertical = 20.dp),

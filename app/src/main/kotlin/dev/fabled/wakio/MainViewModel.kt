@@ -28,6 +28,15 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            if (BuildConfig.DEBUG) {
+                navigate(
+                    route = HomeDirections.HOME_DIRECTION,
+                    builder = { popUpTo("stab") { inclusive = true } }
+                )
+                _isLoading.update { false }
+                return@launch
+            }
+
             val isFirstLaunch = appPreferencesRepository.isFirstLaunch()
             val isUserAuthenticated = authorizationRepository
                 .isUserAuthenticated()

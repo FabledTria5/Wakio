@@ -12,5 +12,14 @@ dependencies {
     implementation(dependencyNotation = Dependencies.javaInject)
     implementation(dependencyNotation = Dependencies.coroutinesCore)
 
-    testImplementation(dependencyNotation = Dependencies.junit)
+    testImplementation(kotlin(Dependencies.junit5))
+    testImplementation(platform(Dependencies.junitPlatform))
+    testImplementation(Dependencies.jupiter)
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }

@@ -1,6 +1,5 @@
 package dev.fabled.alarm.screens
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.animateContentSize
@@ -81,8 +80,6 @@ fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewMode
             isAlarmNameDialogVisible = false
         }
     }
-
-    BackHandler(onBack = alarmViewModel::navigateUp)
 
     Scaffold(
         modifier = modifier.padding(horizontal = 15.dp, vertical = 20.dp),

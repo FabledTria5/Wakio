@@ -1,8 +1,7 @@
-package dev.fabled.domain.use_cases
+package dev.fabled.domain.use_cases.authorization
 
-import dev.fabled.domain.use_cases.authorization.ValidateEmail
-import org.junit.Assert.assertFalse
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Test
 
 class EmailValidationTests {
 
@@ -19,7 +18,7 @@ class EmailValidationTests {
 
     @Test
     fun `Wrong email formats, returns unsuccessful result`() {
-        
+
     }
 
 }

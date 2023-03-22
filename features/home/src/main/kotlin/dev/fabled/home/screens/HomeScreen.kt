@@ -1,9 +1,6 @@
 package dev.fabled.home.screens
 
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -82,11 +79,11 @@ import dev.fabled.home.model.UiArticle
 import dev.fabled.home.model.WelcomeData
 import dev.fabled.navigation.navigation_directions.AlarmDirections
 import dev.fabled.navigation.navigation_directions.HomeDirections
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) {
-    val context = LocalContext.current
-
     val welcomeData by homeViewModel.welcomeData.collectAsStateWithLifecycle()
     val dailyQuote by homeViewModel.dailyQuote.collectAsStateWithLifecycle()
     val notificationsCount by homeViewModel.notificationsCount.collectAsStateWithLifecycle()
@@ -94,12 +91,13 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) {
 
     val onShowWebContentClick: (String) -> Unit = remember {
         { contentUrl ->
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(contentUrl))
-            context.startActivity(intent)
+            homeViewModel.navigate(
+                route = HomeDirections.ArticlesScreen.createArticlesRoute(
+                    URLEncoder.encode(contentUrl, StandardCharsets.UTF_8.toString())
+                )
+            )
         }
     }
-
-    BackHandler(onBack = homeViewModel::navigateUp)
 
     Column(
         modifier = modifier

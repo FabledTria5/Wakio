@@ -1,9 +1,8 @@
-package dev.fabled.domain.use_cases
+package dev.fabled.domain.use_cases.authorization
 
-import dev.fabled.domain.use_cases.authorization.ValidatePassword
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
 class PasswordValidationTests {
 
@@ -12,10 +11,10 @@ class PasswordValidationTests {
     @Test
     fun `Short password, returns unsuccessful result`() {
         val password = "short"
-        
+
         assert(!validatePasswordUseCase(password).isSuccessFull)
     }
-    
+
     @Test
     fun `Blank and empty password, returns unsuccessful result`() {
         val emptyPassword = ""

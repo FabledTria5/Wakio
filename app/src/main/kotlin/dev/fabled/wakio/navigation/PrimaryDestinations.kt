@@ -20,6 +20,7 @@ import com.google.accompanist.navigation.animation.navigation
 import dev.fabled.alarm.screens.AlarmEditScreen
 import dev.fabled.alarm.screens.AlarmSoundScreen
 import dev.fabled.alarm.screens.AlarmsScreen
+import dev.fabled.home.screens.ArticlesScreen
 import dev.fabled.home.screens.HomeScreen
 import dev.fabled.home.screens.NotificationsScreen
 import dev.fabled.navigation.navigation_directions.ActivityDirections
@@ -65,6 +66,22 @@ fun NavGraphBuilder.homeGraph(viewModelStoreOwner: ViewModelStoreOwner) {
                     .systemBarsPadding()
                     .fillMaxSize(),
                 homeViewModel = hiltViewModel(viewModelStoreOwner)
+            )
+        }
+        composable(
+            route = HomeDirections.ArticlesScreen.route(),
+            arguments = HomeDirections.ArticlesScreen.arguments
+        ) { navBackStackEntry ->
+            val articleUrl = navBackStackEntry
+                .arguments
+                ?.getString(HomeDirections.ArticlesScreen.ARTICLE_URL)
+                .orEmpty()
+
+            ArticlesScreen(
+                modifier = Modifier
+                    .systemBarsPadding()
+                    .fillMaxSize(),
+                targetUrl = articleUrl
             )
         }
     }
