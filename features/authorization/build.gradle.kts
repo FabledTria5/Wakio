@@ -72,7 +72,7 @@ dependencies {
     androidTestImplementation(dependencyNotation = Dependencies.androidJunit)
     androidTestImplementation(dependencyNotation = Dependencies.espressoCore)
     androidTestImplementation(dependencyNotation = Dependencies.junitCompose)
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.4.0")
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.45")
 
 }

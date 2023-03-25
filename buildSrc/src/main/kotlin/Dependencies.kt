@@ -10,7 +10,7 @@ object Config {
     const val applicationId = "dev.fabled.wakio"
     const val testRunner = "androidx.test.runner.AndroidJUnitRunner"
     const val jvmTargetVersion = "11"
-    const val composeCompilerExtensionVersion = "1.4.3"
+    const val composeCompilerExtensionVersion = "1.4.4"
 
     val javaVersion = JavaVersion.VERSION_11
 }
@@ -26,7 +26,7 @@ object Versions {
 
     // Kotlin
     const val kotlin_version = "1.9.0"
-    const val lifecycle_runtime_version = "2.6.0"
+    const val lifecycle_runtime_version = "2.6.1"
     const val kotlin_serialization_version = "1.5.0"
     const val desugar_version = "1.1.5"
 
@@ -37,18 +37,18 @@ object Versions {
     const val google_authentication_version = "20.4.1"
 
     // Design
-    const val appCompat_version = "1.6.0-rc01"
+    const val appCompat_version = "1.6.1"
 
     // Compose
-    const val compose_version = "1.4.0-rc01"
-    const val compose_material_version = "1.1.0-alpha08"
-    const val activity_compose_version = "1.6.1"
-    const val accompanist_version = "0.29.2-rc"
+    const val compose_version = "1.4.0"
+    const val compose_material_version = "1.1.0-beta01"
+    const val activity_compose_version = "1.7.0"
+    const val accompanist_version = "0.30.0"
     const val coil_version = "2.2.2"
     const val hilt_compose_version = "1.1.0-alpha01"
     const val customview_version = "1.2.0-alpha02"
     const val pooling_container_version = "1.0.0"
-    const val constraint_layout_version = "1.1.0-alpha08"
+    const val constraint_layout_version = "1.1.0-alpha09"
     const val ui_util_version = "1.4.0-rc01"
 
     // Dagger Hilt
@@ -73,7 +73,7 @@ object Versions {
     const val room_version = "2.5.0"
 
     // Preferences
-    const val preferences_datastore_version = "1.1.0-alpha01"
+    const val preferences_datastore_version = "1.1.0-alpha02"
 
 }
 
@@ -142,11 +142,6 @@ object Dependencies {
         "com.google.accompanist:accompanist-systemuicontroller:${Versions.accompanist_version}"
     const val composeNavigation =
         "com.google.accompanist:accompanist-navigation-animation:${Versions.accompanist_version}"
-    const val pager = "com.google.accompanist:accompanist-pager:${Versions.accompanist_version}"
-    const val pagerIndicators =
-        "com.google.accompanist:accompanist-pager-indicators:${Versions.accompanist_version}"
-    const val flowLayout =
-        "com.google.accompanist:accompanist-flowlayout:${Versions.accompanist_version}"
     const val permissions =
         "com.google.accompanist:accompanist-permissions:${Versions.accompanist_version}"
     const val webView = "com.google.accompanist:accompanist-webview:${Versions.accompanist_version}"

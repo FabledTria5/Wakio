@@ -8,22 +8,27 @@ import dev.fabled.common.code.model.Gender
 import dev.fabled.domain.model.Resource
 import dev.fabled.domain.repository.AuthorizationRepository
 import dev.fabled.domain.repository.QuotesRepository
+import dev.fabled.domain.use_cases.alarms.GetNextAlarm
 import dev.fabled.domain.use_cases.articles.GetDailyArticle
 import dev.fabled.home.model.UiArticle
 import dev.fabled.home.model.WelcomeData
+import dev.fabled.home.utils.toUiModel
 import dev.fabled.navigation.navigation_core.Navigator
 import dev.fabled.navigation.navigation_directions.ActivityDirections
+import dev.fabled.navigation.navigation_directions.AlarmDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -35,26 +40,73 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val navigator: Navigator,
     private val authorizationRepository: AuthorizationRepository,
-    private val quotesRepository: QuotesRepository,
-    private val getDailyArticle: GetDailyArticle
+    quotesRepository: QuotesRepository,
+    getDailyArticle: GetDailyArticle,
+    getNextAlarm: GetNextAlarm
 ) : ViewModel(), Navigator by navigator {
 
     private val _welcomeData = MutableStateFlow(WelcomeData())
     val welcomeData = _welcomeData.asStateFlow()
 
-    private val _dailyQuote = MutableStateFlow(value = "")
-    val dailyQuote = _dailyQuote.asStateFlow()
-
     private val _notificationsCount = MutableStateFlow(value = 5)
     val notificationsCount = _notificationsCount.asStateFlow()
 
-    private val _dailyArticle = MutableStateFlow<Resource<UiArticle>>(Resource.Loading)
-    val dailyArticle = _dailyArticle.asStateFlow()
+    val dailyQuote = quotesRepository.getQuoteOfTheDay()
+        .debounce(timeoutMillis = 500)
+        .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = "")
+
+    val nextAlarm = getNextAlarm()
+        .map { result ->
+            when (result) {
+                is Resource.Success -> Resource.Success(result.data.toUiModel())
+                is Resource.Error -> {
+                    Timber.e(result.error)
+                    Resource.Error(result.error)
+                }
+
+                Resource.Idle -> Resource.Idle
+                Resource.Loading -> Resource.Loading
+                Resource.Completed -> Resource.Completed
+            }
+        }
+        .catch { Timber.e(it) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = Resource.Idle
+        )
+
+    val dailyArticle = getDailyArticle()
+        .debounce(timeoutMillis = 500)
+        .map { result ->
+            when (result) {
+                is Resource.Success -> Resource.Success(
+                    data = UiArticle(
+                        url = result.data.url,
+                        imagePath = result.data.imagePath,
+                        articleTitle = result.data.articleName,
+                        articleText = result.data.shortText
+                    )
+                )
+
+                Resource.Loading -> Resource.Loading
+                Resource.Completed -> Resource.Completed
+                is Resource.Error -> {
+                    Timber.e(result.error)
+                    Resource.Error(result.error)
+                }
+
+                Resource.Idle -> Resource.Idle
+            }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = Resource.Idle
+        )
 
     init {
         getWelcomeData()
-        observeDailyQuote()
-        observeDailyArticle()
     }
 
     private fun getWelcomeData() = viewModelScope.launch {
@@ -75,39 +127,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun observeDailyQuote() = quotesRepository.getQuoteOfTheDay()
-        .debounce(timeoutMillis = 500)
-        .onEach { quote ->
-            _dailyQuote.update { quote }
-        }
-        .flowOn(Dispatchers.IO)
-        .launchIn(viewModelScope)
-
-    private fun observeDailyArticle() = getDailyArticle()
-        .debounce(timeoutMillis = 500)
-        .onEach { resource ->
-            when (resource) {
-                is Resource.Error -> _dailyArticle.update { Resource.Error(resource.error) }
-                Resource.Loading -> _dailyArticle.update { Resource.Loading }
-                is Resource.Success -> _dailyArticle.update {
-                    Resource.Success(
-                        data = UiArticle(
-                            url = resource.data.url,
-                            imagePath = resource.data.imagePath,
-                            articleTitle = resource.data.articleName,
-                            articleText = resource.data.shortText
-                        )
-                    )
-                }
-
-                else -> Unit
-            }
-        }
-        .flowOn(Dispatchers.IO)
-        .launchIn(viewModelScope)
+    fun openAlarmEditScreen() {
+        navigate(route = AlarmDirections.AlarmEditScreen.route())
+    }
 
     fun openUserStats() {
-        navigator.navigate(ActivityDirections.ActivityScreen.route())
+        navigate(route = ActivityDirections.ActivityScreen.route())
     }
 
 }

@@ -148,7 +148,8 @@ private fun PageIndication(
                     animationSpec = tween(durationMillis = 500),
                     targetOffsetX = { 0 }
                 ) + fadeOut()
-            }
+            },
+            label = ""
         ) { text ->
             Text(
                 modifier = Modifier.padding(vertical = 18.dp),

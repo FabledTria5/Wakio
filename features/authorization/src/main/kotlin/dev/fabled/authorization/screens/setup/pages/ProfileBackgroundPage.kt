@@ -66,7 +66,8 @@ fun ProfileBackgroundScreen(
         ) {
             items(items = backgroundImages) { model ->
                 val borderColor by animateColorAsState(
-                    targetValue = if (selectedBackgroundModel == model) PrimaryDark else Color.White
+                    targetValue = if (selectedBackgroundModel == model) PrimaryDark else Color.White,
+                    label = "border_color_animation"
                 )
 
                 Column {

@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.navigation
+import androidx.navigation.compose.navigation
 import com.google.accompanist.navigation.animation.composable
 import dev.fabled.authorization.screens.authorization.AuthorizationScreen
 import dev.fabled.authorization.screens.setup.SetupScreen

@@ -2,4 +2,9 @@
 <resources>
     <string name="my_stats">My Stats</string>
     <string name="articles">Articles</string>
+    <string name="scheduled_alarm">Scheduled Alarm</string>
+    <string name="my_activity">My Activity</string>
+    <string name="steps">Steps</string>
+    <string name="yoga">Yoga</string>
+    <string name="calories">Calories</string>
 </resources>

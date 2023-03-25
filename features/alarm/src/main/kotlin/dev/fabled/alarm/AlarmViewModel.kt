@@ -16,12 +16,11 @@ import dev.fabled.navigation.navigation_core.Navigator
 import dev.fabled.navigation.navigation_directions.AlarmDirections
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -36,22 +35,19 @@ class AlarmViewModel @Inject constructor(
     private val deleteAlarm: DeleteAlarm
 ) : ViewModel(), Navigator by navigator {
 
-    private val _alarmsList = MutableStateFlow<List<AlarmUiModel>>(emptyList())
-    val alarmsList = _alarmsList.asStateFlow()
+    val alarmsList = getAlarmList()
+        .map { models ->
+            models.map { it.toUiModel() }
+        }
+        .catch { e -> Timber.e(e) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Lazily,
+            initialValue = emptyList()
+        )
 
     private val _selectedAlarm = MutableStateFlow(AlarmUiModel())
     val selectedAlarm = _selectedAlarm.asStateFlow()
-
-    init {
-        getAlarmList()
-            .map { modelsList ->
-                modelsList.map { model -> model.toUiModel() }
-            }
-            .onEach { list -> _alarmsList.update { list } }
-            .catch { exception -> Timber.e(exception) }
-            .flowOn(Dispatchers.IO)
-            .launchIn(viewModelScope)
-    }
 
     fun openAlarmEditScreen(alarmUiModel: AlarmUiModel = AlarmUiModel()) {
         _selectedAlarm.update { alarmUiModel }
@@ -99,7 +95,7 @@ class AlarmViewModel @Inject constructor(
             val alarmModel = alarmUiModel.toDomainModel()
 
             createNewAlarm(alarmModel).collect { resource ->
-                when(resource) {
+                when (resource) {
                     Resource.Completed -> navigateUp()
                     is Resource.Error -> Timber.e(resource.error)
                     else -> Unit

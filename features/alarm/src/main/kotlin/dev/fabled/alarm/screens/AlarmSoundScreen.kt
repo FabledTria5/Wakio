@@ -24,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -58,7 +57,6 @@ import dev.fabled.common.ui.theme.PrimaryDark
 import dev.fabled.common.ui.theme.PrimaryGradient
 import dev.fabled.common.ui.theme.PrimaryLight
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmSoundScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewModel) {
     val context = LocalContext.current
@@ -169,17 +167,20 @@ private fun AlarmSoundListItem(
 ) {
     val backgroundColor by animateColorAsState(
         targetValue = if (isSelected) Color.Black else Color.Transparent,
-        animationSpec = tween(durationMillis = 500)
+        animationSpec = tween(durationMillis = 500),
+        label = "background_color_animation"
     )
 
     val textColor by animateColorAsState(
         targetValue = if (isSelected) PrimaryLight else Color.White,
-        animationSpec = tween(durationMillis = 500)
+        animationSpec = tween(durationMillis = 500),
+        label = "text_color_animation"
     )
 
     val iconTint by animateColorAsState(
         targetValue = if (isSelected) PrimaryDark else Color.White,
-        animationSpec = tween(durationMillis = 500)
+        animationSpec = tween(durationMillis = 500),
+        label = "icon_tint_animation"
     )
 
     Row(

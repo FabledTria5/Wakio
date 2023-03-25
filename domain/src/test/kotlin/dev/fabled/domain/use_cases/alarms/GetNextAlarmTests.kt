@@ -4,6 +4,11 @@ import dev.fabled.domain.model.AlarmModel
 import dev.fabled.domain.model.Resource
 import dev.fabled.domain.repository.AlarmsRepository
 import dev.fabled.domain.repository.FakeAlarmsRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -19,9 +24,11 @@ class GetNextAlarmTests {
 
     private val currentTime = LocalDateTime.now()
 
+    private val testScope = CoroutineScope(context = Dispatchers.Unconfined + SupervisorJob())
+
     @Test
     fun `No alarms in database, returns Resource - Idle`() = runBlocking {
-        assertEquals(Resource.Idle, getNextAlarm())
+        assertEquals(Resource.Idle, getNextAlarm().first())
     }
 
     @Test
@@ -44,7 +51,7 @@ class GetNextAlarmTests {
 
         fakeRepository.createNewAlarm(alarmModel)
 
-        assertEquals(Resource.Idle, getNextAlarm())
+        assertEquals(Resource.Idle, getNextAlarm().first())
     }
 
     @Test
@@ -67,7 +74,7 @@ class GetNextAlarmTests {
 
         fakeRepository.createNewAlarm(alarmModel)
 
-        assertEquals(Resource.Idle, getNextAlarm())
+        assertEquals(Resource.Idle, getNextAlarm().first())
     }
 
     @Test
@@ -92,7 +99,7 @@ class GetNextAlarmTests {
 
             fakeRepository.createNewAlarm(alarmModel)
 
-            assertEquals(Resource.Idle, getNextAlarm())
+            assertEquals(Resource.Idle, getNextAlarm().first())
         }
 
     @Test
@@ -106,7 +113,7 @@ class GetNextAlarmTests {
                 alarmId = 0,
                 alarmName = "New alarm",
                 alarmHour = currentHour,
-                alarmMinute = currentMinute - 30,
+                alarmMinute = currentMinute - currentMinute / 5,
                 alarmDays = listOf(currentDay),
                 alarmSoundTag = "",
                 alarmVolume = 0f,
@@ -119,7 +126,7 @@ class GetNextAlarmTests {
             val alarmModel2 = AlarmModel(
                 alarmId = 0,
                 alarmName = "New alarm1",
-                alarmHour = currentHour - 3,
+                alarmHour = currentHour - currentHour / 2,
                 alarmMinute = currentMinute,
                 alarmDays = listOf(currentDay),
                 alarmSoundTag = "",
@@ -133,8 +140,8 @@ class GetNextAlarmTests {
             val alarmModel3 = AlarmModel(
                 alarmId = 0,
                 alarmName = "New alarm2",
-                alarmHour = currentHour - 1,
-                alarmMinute = currentMinute - 45,
+                alarmHour = currentHour - currentHour / 3,
+                alarmMinute = currentMinute - currentMinute / 2,
                 alarmDays = listOf(currentDay),
                 alarmSoundTag = "",
                 alarmVolume = 0f,
@@ -148,7 +155,7 @@ class GetNextAlarmTests {
             fakeRepository.createNewAlarm(alarmModel2)
             fakeRepository.createNewAlarm(alarmModel3)
 
-            assertEquals(Resource.Idle, getNextAlarm())
+            assertEquals(Resource.Idle, getNextAlarm().first())
         }
 
     @Test
@@ -161,7 +168,7 @@ class GetNextAlarmTests {
             alarmId = 0,
             alarmName = "New alarm",
             alarmHour = currentHour,
-            alarmMinute = currentMinute + 10,
+            alarmMinute = (currentMinute + 10).coerceIn(0, 59),
             alarmDays = listOf(currentDay),
             alarmSoundTag = "",
             alarmVolume = 0f,
@@ -173,7 +180,7 @@ class GetNextAlarmTests {
 
         fakeRepository.createNewAlarm(alarmModel)
 
-        assertTrue(getNextAlarm() is Resource.Success)
+        assertTrue(getNextAlarm().first() is Resource.Success)
     }
 
     @Test
@@ -185,7 +192,7 @@ class GetNextAlarmTests {
             alarmId = 0,
             alarmName = "New alarm",
             alarmHour = currentHour,
-            alarmMinute = currentMinute + 15,
+            alarmMinute = (currentMinute + 15).coerceIn(0, 59),
             alarmDays = listOf(1, 2, 3, 4, 5, 6, 7),
             alarmSoundTag = "",
             alarmVolume = 0f,
@@ -197,11 +204,11 @@ class GetNextAlarmTests {
 
         fakeRepository.createNewAlarm(alarmModel)
 
-        assertTrue(getNextAlarm() is Resource.Success)
+        assertTrue(getNextAlarm().first() is Resource.Success)
     }
 
     @Test
-    fun `Alarm for every day with current minute, return Idle`() = runBlocking {
+    fun `Alarm for every day with current time, return Idle`() = runBlocking {
         val currentHour = currentTime.hour
         val currentMinute = currentTime.minute
 
@@ -221,12 +228,66 @@ class GetNextAlarmTests {
 
         fakeRepository.createNewAlarm(alarmModel)
 
-        assertTrue(getNextAlarm() is Resource.Success)
+        assertTrue(getNextAlarm().first() is Resource.Success)
+    }
+
+    @Test
+    fun `Alarm for current day, earlier time - return Idle`() = runBlocking {
+        val currentHour = currentTime.hour
+        val currentMinute = currentTime.minute
+
+        val alarmModel = AlarmModel(
+            alarmId = 0,
+            alarmName = "New alarm",
+            alarmHour = currentHour - 1,
+            alarmMinute = (currentMinute - 15).coerceIn(0, 59),
+            alarmDays = listOf(currentTime.dayOfWeek.value),
+            alarmSoundTag = "",
+            alarmVolume = 0f,
+            isVibrationEnabled = false,
+            isAlarmEnabled = false,
+            gradientTag = "",
+            createdAt = 0L
+        )
+
+        fakeRepository.createNewAlarm(alarmModel)
+
+        assertEquals(Resource.Idle, getNextAlarm().first())
+    }
+
+    @Test
+    fun `Dynamically add alarm with correct time - return Success`() {
+        var currentAlarm: Resource<AlarmModel> = Resource.Idle
+        testScope.launch {
+            getNextAlarm().collect { currentAlarm = it }
+        }
+
+        assertTrue(currentAlarm is Resource.Idle)
+
+        val nextHour = currentTime.plusHours(1).hour
+
+        val alarmModel = AlarmModel(
+            alarmId = 0,
+            alarmName = "New alarm",
+            alarmHour = nextHour,
+            alarmMinute = currentTime.minute,
+            alarmDays = listOf(currentTime.dayOfWeek.value),
+            alarmSoundTag = "",
+            alarmVolume = 0f,
+            isVibrationEnabled = false,
+            isAlarmEnabled = false,
+            gradientTag = "",
+            createdAt = 0L
+        )
+
+        testScope.launch { fakeRepository.createNewAlarm(alarmModel) }
+
+        assertTrue(currentAlarm is Resource.Success)
     }
 
     @AfterEach
     fun removeLastAddedAlarm() = runBlocking {
-        fakeRepository.deleteAlarm(0)
+        fakeRepository.deleteAlarm(alarmId = 0)
     }
 
 }

@@ -77,7 +77,6 @@ import dev.fabled.home.R
 import dev.fabled.home.components.ScheduledAlarmPopup
 import dev.fabled.home.model.UiArticle
 import dev.fabled.home.model.WelcomeData
-import dev.fabled.navigation.navigation_directions.AlarmDirections
 import dev.fabled.navigation.navigation_directions.HomeDirections
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -86,6 +85,7 @@ import java.nio.charset.StandardCharsets
 fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) {
     val welcomeData by homeViewModel.welcomeData.collectAsStateWithLifecycle()
     val dailyQuote by homeViewModel.dailyQuote.collectAsStateWithLifecycle()
+    val nextAlarm by homeViewModel.nextAlarm.collectAsStateWithLifecycle()
     val notificationsCount by homeViewModel.notificationsCount.collectAsStateWithLifecycle()
     val dailyArticle by homeViewModel.dailyArticle.collectAsStateWithLifecycle()
 
@@ -119,15 +119,20 @@ fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel) {
                 .fillMaxWidth(),
             dailyQuote = dailyQuote
         )
-        ScheduledAlarm(
-            modifier = Modifier
-                .padding(top = 20.dp)
-                .fillMaxWidth()
-                .height(135.dp),
-            onPreviewAlarmClick = {
-                homeViewModel.navigate(route = AlarmDirections.AlarmEditScreen.route())
-            }
-        )
+        when (val alarm = nextAlarm) {
+            is Resource.Success -> ScheduledAlarm(
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .fillMaxWidth()
+                    .height(135.dp),
+                alarmTime = alarm.data.alarmTime,
+                isEnabled = alarm.data.isAlarmEnabled,
+                activeDays = alarm.data.alarmDays,
+                onPreviewAlarmClick = homeViewModel::openAlarmEditScreen
+            )
+
+            else -> Unit
+        }
         ActivityStatistics(
             modifier = Modifier
                 .padding(vertical = 15.dp)
@@ -269,8 +274,15 @@ private fun DailyQuote(modifier: Modifier = Modifier, dailyQuote: String) {
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-private fun ScheduledAlarm(modifier: Modifier = Modifier, onPreviewAlarmClick: () -> Unit) {
-    val daysList = listOf("S", "M", "T", "W", "T", "F", "S")
+private fun ScheduledAlarm(
+    modifier: Modifier = Modifier,
+    alarmTime: String,
+    isEnabled: Boolean,
+    activeDays: HashSet<Int>,
+    onPreviewAlarmClick: () -> Unit
+) {
+    val daysMap =
+        hashMapOf(1 to "M", 2 to "T", 3 to "W", 4 to "T", 5 to "F", 6 to "S", 7 to "S")
 
     var isPopUpEnabled by remember { mutableStateOf(value = false) }
 
@@ -286,7 +298,7 @@ private fun ScheduledAlarm(modifier: Modifier = Modifier, onPreviewAlarmClick: (
                 .weight(.7f)
         ) {
             Text(
-                text = "Scheduled Alarm",
+                text = stringResource(R.string.scheduled_alarm),
                 style = TextStyle(brush = PrimaryGradient),
                 fontFamily = Oxygen,
                 fontWeight = FontWeight.Bold,
@@ -300,33 +312,15 @@ private fun ScheduledAlarm(modifier: Modifier = Modifier, onPreviewAlarmClick: (
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = buildAnnotatedString {
-                        append(
-                            text = AnnotatedString(
-                                text = "5:30",
-                                spanStyle = SpanStyle(
-                                    color = Color.White,
-                                    fontFamily = Oxygen,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 32.sp
-                                )
-                            )
-                        )
-                        append(
-                            text = AnnotatedString(
-                                text = "AM",
-                                spanStyle = SpanStyle(
-                                    color = Color.White,
-                                    fontFamily = Oxygen,
-                                    fontSize = 24.sp
-                                )
-                            )
-                        )
-                    }
+                    text = alarmTime,
+                    color = Color.White,
+                    fontFamily = Oxygen,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 32.sp
                 )
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Switch(
-                        checked = true,
+                        checked = isEnabled,
                         onCheckedChange = {},
                         colors = SwitchDefaults.colors(
                             checkedTrackColor = PrimaryDark,
@@ -357,26 +351,20 @@ private fun ScheduledAlarm(modifier: Modifier = Modifier, onPreviewAlarmClick: (
         ) {
             Text(
                 text = buildAnnotatedString {
-                    daysList.forEachIndexed { index, s ->
+                    daysMap.keys.forEach { dayKey ->
                         append(
-                            AnnotatedString(
-                                text = s,
+                            text = AnnotatedString(
+                                text = "${daysMap[dayKey].orEmpty()} ",
                                 spanStyle = SpanStyle(
-                                    color = if (index in 1..5)
-                                        Color.White
-                                    else
-                                        Color(0xFF979797),
-                                    fontWeight = if (index in 1..5)
-                                        FontWeight.Bold
-                                    else
-                                        FontWeight.Light
+                                    color = if (dayKey in activeDays) Color.White
+                                    else Color(color = 0xFF979797)
                                 )
                             )
                         )
-                        append(" ")
                     }
                 },
                 fontFamily = Oxygen,
+                fontWeight = FontWeight.Light,
                 fontSize = 16.sp
             )
         }
@@ -388,7 +376,7 @@ private fun ScheduledAlarm(modifier: Modifier = Modifier, onPreviewAlarmClick: (
 private fun ActivityStatistics(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Text(
-            text = "My Activity",
+            text = stringResource(R.string.my_activity),
             style = TextStyle(brush = PrimaryGradient),
             fontFamily = Oxygen,
             fontWeight = FontWeight.Bold,
@@ -404,19 +392,19 @@ private fun ActivityStatistics(modifier: Modifier = Modifier) {
             ActivityBar(
                 modifier = Modifier.weight(1f),
                 barGradient = PinkGradient,
-                barName = "Yoga",
+                barName = stringResource(R.string.yoga),
                 barIcon = painterResource(id = R.drawable.ic_yoga)
             )
             ActivityBar(
                 modifier = Modifier.weight(1f),
                 barGradient = PrimaryGradient,
-                barName = "Steps",
+                barName = stringResource(R.string.steps),
                 barIcon = painterResource(id = R.drawable.ic_steps)
             )
             ActivityBar(
                 modifier = Modifier.weight(1f),
                 barGradient = OrangeGradient,
-                barName = "Calories",
+                barName = stringResource(R.string.calories),
                 barIcon = painterResource(id = R.drawable.ic_calories)
             )
         }
@@ -435,7 +423,7 @@ private fun ActivityBar(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
-            modifier = Modifier.aspectRatio(1f),
+            modifier = Modifier.aspectRatio(ratio = 1f),
             contentAlignment = Alignment.Center
         ) {
             Canvas(

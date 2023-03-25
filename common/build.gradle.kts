@@ -72,9 +72,6 @@ dependencies {
     androidTestApi(dependencyNotation = Dependencies.espressoCore)
     androidTestApi(dependencyNotation = Dependencies.junitCompose)
 
-    // Accompanist
-    implementation(dependencyNotation = Dependencies.pager)
-
     // Dagger Hilt
     implementation(dependencyNotation = Dependencies.hiltAndroid)
     implementation(dependencyNotation = Dependencies.hiltCompose)

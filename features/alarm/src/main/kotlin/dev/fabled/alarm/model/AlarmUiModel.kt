@@ -14,16 +14,12 @@ data class AlarmUiModel(
     val alarmName: MutableState<String> = mutableStateOf(value = "New Alarm"),
     val alarmTime: MutableState<TimeModel> = mutableStateOf(TimeModel()),
     val alarmDays: SnapshotStateList<DayUiModel> = mutableStateListOf<DayUiModel>().apply {
-        val nextDayValue = LocalDate
-            .now()
-            .plusDays(1)
-            .dayOfWeek
-            .value
+        val currentDay = LocalDate.now().dayOfWeek.value
 
         val daysList = DayUiModel
             .provideWeekDays()
             .map { model ->
-                if (model.dayOfWeekNumber == nextDayValue)
+                if (model.dayOfWeekNumber == currentDay)
                     model.copy(isChecked = mutableStateOf(true))
                 else model
             }

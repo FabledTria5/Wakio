@@ -52,7 +52,8 @@ fun GenderPage(
 
     val outlinedButtonColor by animateColorAsState(
         targetValue = if (buttonsEnabled) Color.White else Color.Gray,
-        animationSpec = tween(durationMillis = 500)
+        animationSpec = tween(durationMillis = 500),
+        label = "button_color_animation"
     )
 
     Column(
