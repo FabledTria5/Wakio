@@ -4,7 +4,7 @@ import dev.fabled.domain.model.AlarmModel
 
 interface AlarmUtil {
 
-    fun setAlarm(alarmModel: AlarmModel)
+    fun setAlarm(alarmModel: AlarmModel, uniqueId: Int)
 
     fun removeAlarm(alarmModel: AlarmModel)
 

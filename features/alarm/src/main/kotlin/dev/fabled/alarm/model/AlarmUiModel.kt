@@ -11,7 +11,7 @@ import java.time.LocalDate
 data class AlarmUiModel(
     val alarmId: Int = -1,
     val creationTime: Long = System.currentTimeMillis(),
-    val alarmName: MutableState<String> = mutableStateOf(value = "New Alarm"),
+    val alarmName: MutableState<String> = mutableStateOf(value = "New alarm"),
     val alarmTime: MutableState<TimeModel> = mutableStateOf(TimeModel()),
     val alarmDays: SnapshotStateList<DayUiModel> = mutableStateListOf<DayUiModel>().apply {
         val currentDay = LocalDate.now().dayOfWeek.value

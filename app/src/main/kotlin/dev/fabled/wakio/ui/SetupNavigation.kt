@@ -31,7 +31,6 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dev.fabled.navigation.navigation_core.Navigator
 import dev.fabled.navigation.navigation_core.NavigatorEvent
 import dev.fabled.navigation.navigation_directions.BottomNavigationDestinations
-import dev.fabled.navigation.navigation_directions.HomeDirections
 import dev.fabled.navigation.navigation_directions.StartUpDirections
 import dev.fabled.wakio.navigation.activityGraph
 import dev.fabled.wakio.navigation.alarmGraph
@@ -77,7 +76,7 @@ fun SetupNavigation(navigator: Navigator) {
     ) {
         AnimatedNavHost(
             navController = navHostController,
-            startDestination = HomeDirections.HOME_DIRECTION
+            startDestination = "stab"
         ) {
             composable(route = "stab") { Box(modifier = Modifier.fillMaxSize()) }
             startUpGraph()

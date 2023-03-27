@@ -40,7 +40,7 @@ object Versions {
     const val appCompat_version = "1.6.1"
 
     // Compose
-    const val compose_version = "1.4.0"
+    const val compose_version = "1.5.0-alpha01"
     const val compose_material_version = "1.1.0-beta01"
     const val activity_compose_version = "1.7.0"
     const val accompanist_version = "0.30.0"
@@ -73,7 +73,7 @@ object Versions {
     const val room_version = "2.5.0"
 
     // Preferences
-    const val preferences_datastore_version = "1.1.0-alpha02"
+    const val preferences_datastore_version = "1.1.0-alpha03"
 
 }
 
@@ -175,7 +175,10 @@ object Dependencies {
     const val androidJunit = "androidx.test.ext:junit:${Versions.android_jUnit_version}"
     const val espressoCore =
         "androidx.test.espresso:espresso-core:${Versions.espresso_core_version}"
+    const val composeManifest = "androidx.compose.ui:ui-test-manifest:${Versions.compose_version}"
+    const val hiltTesting = "com.google.dagger:hilt-android-testing:${Versions.hilt_android_version}"
 
+    // Testing Junit5
     const val junit5 = "test-junit5"
     const val junitPlatform = "org.junit:junit-bom:${Versions.junitBom}"
     const val jupiter = "org.junit.jupiter:junit-jupiter"

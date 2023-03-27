@@ -5,11 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface AlarmsRepository {
 
-    suspend fun createNewAlarm(alarmModel: AlarmModel)
+    suspend fun createNewAlarm(alarmModel: AlarmModel): Long
 
     suspend fun deleteAlarm(alarmId: Int)
 
-    suspend fun checkUniqueAlarmName(alarmName: String): Boolean
+    suspend fun checkUniqueAlarmName(alarmName: String): String?
 
     fun getAlarmsList(): Flow<List<AlarmModel>>
 

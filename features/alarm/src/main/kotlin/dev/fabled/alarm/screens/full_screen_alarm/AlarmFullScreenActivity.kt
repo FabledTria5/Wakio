@@ -50,7 +50,7 @@ class AlarmFullScreenActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     WorkingAlarmScreen(
                         onCloseScreenClicked = {
-                            alarmService.stopService()
+                            alarmService.stop()
                             finish()
                         }
                     )
@@ -59,8 +59,8 @@ class AlarmFullScreenActivity : ComponentActivity() {
         }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
 
         Intent(this, AlarmService::class.java).also { intent ->
             bindService(intent, alarmServiceConnection, Context.BIND_AUTO_CREATE)

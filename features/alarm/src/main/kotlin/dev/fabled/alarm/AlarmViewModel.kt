@@ -98,6 +98,7 @@ class AlarmViewModel @Inject constructor(
                 when (resource) {
                     Resource.Completed -> navigateUp()
                     is Resource.Error -> Timber.e(resource.error)
+
                     else -> Unit
                 }
             }

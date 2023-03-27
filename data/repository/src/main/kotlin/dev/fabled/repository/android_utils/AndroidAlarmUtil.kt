@@ -17,7 +17,7 @@ class AndroidAlarmUtil @Inject constructor(
 
     private val alarmManager by lazy { context.getSystemService(AlarmManager::class.java) }
 
-    override fun setAlarm(alarmModel: AlarmModel) {
+    override fun setAlarm(alarmModel: AlarmModel, uniqueId: Int) {
         val alarmIntent = Intent("dev.fabled.wakio.RECEIVE_ALARM").apply {
             putExtra("ALARM_SOUND_TAG", alarmModel.alarmSoundTag)
             putExtra("ALARM_VOLUME", alarmModel.alarmVolume)
@@ -42,7 +42,6 @@ class AndroidAlarmUtil @Inject constructor(
 
         repeat(times = 7) {
             if (calendar.get(Calendar.DAY_OF_WEEK) - 1 in alarmModel.alarmDays) {
-                val uniqueId = alarmModel.createdAt.toInt() + calendar.get(Calendar.DAY_OF_WEEK) - 1
 //                val pendingIntent = PendingIntent.getBroadcast(
 //                    context,
 //                    uniqueId,

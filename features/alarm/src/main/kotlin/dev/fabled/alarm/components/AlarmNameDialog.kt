@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import dev.fabled.alarm.R
+import dev.fabled.alarm.utils.TestTags
 import dev.fabled.common.ui.components.GradientButton
 import dev.fabled.common.ui.theme.BackgroundColor
 import dev.fabled.common.ui.theme.Oxygen
@@ -53,9 +55,14 @@ fun AlarmNameDialog(
     var alarmNameText by remember { mutableStateOf(alarmName) }
 
     AlertDialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-        modifier = Modifier.clip(RoundedCornerShape(16.dp))
+        modifier = Modifier
+            .clip(RoundedCornerShape(16.dp))
+            .testTag(TestTags.ALARM_NAME_DIALOG),
+        onDismissRequest = {
+            alarmNameText = ""
+            onDismiss()
+        },
+        properties = DialogProperties(usePlatformDefaultWidth = false)
     ) {
         Column(
             modifier = modifier
@@ -82,7 +89,8 @@ fun AlarmNameDialog(
             TextField(
                 modifier = Modifier
                     .padding(top = 25.dp, bottom = 40.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .testTag(TestTags.ALARM_NAME_INPUT),
                 value = alarmNameText,
                 onValueChange = { alarmNameText = it },
                 shape = RoundedCornerShape(16.dp),
@@ -114,10 +122,13 @@ fun AlarmNameDialog(
                 )
             )
             GradientButton(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag(TestTags.ALARM_NAME_DIALOG_CLOSE_BUTTON),
                 gradient = PrimaryGradient,
                 shape = RoundedCornerShape(8.dp),
-                onClick = { onSaveAlarmName(alarmNameText) }
+                onClick = { onSaveAlarmName(alarmNameText) },
+                enabled = alarmNameText.isNotBlank()
             ) {
                 Text(
                     text = stringResource(id = R.string.save),

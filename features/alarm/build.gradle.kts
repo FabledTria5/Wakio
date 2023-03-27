@@ -58,11 +58,14 @@ dependencies {
 
     // Dagger Hilt
     implementation(dependencyNotation = Dependencies.hiltAndroid)
+    implementation(dependencyNotation = Dependencies.hiltCompose)
     kapt(dependencyNotation = Dependencies.hiltCompiler)
 
     // Testing
     testImplementation(dependencyNotation = Dependencies.junit)
+    debugImplementation(dependencyNotation = Dependencies.composeManifest)
     androidTestImplementation(dependencyNotation = Dependencies.androidJunit)
     androidTestImplementation(dependencyNotation = Dependencies.espressoCore)
     androidTestImplementation(dependencyNotation = Dependencies.junitCompose)
+
 }

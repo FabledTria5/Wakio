@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -53,9 +54,12 @@ class HomeViewModel @Inject constructor(
 
     val dailyQuote = quotesRepository.getQuoteOfTheDay()
         .debounce(timeoutMillis = 500)
+        .catch { e -> Timber.e(e) }
+        .flowOn(Dispatchers.IO)
         .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = "")
 
     val nextAlarm = getNextAlarm()
+        .debounce(timeoutMillis = 500)
         .map { result ->
             when (result) {
                 is Resource.Success -> Resource.Success(result.data.toUiModel())
@@ -70,6 +74,7 @@ class HomeViewModel @Inject constructor(
             }
         }
         .catch { Timber.e(it) }
+        .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
@@ -99,6 +104,8 @@ class HomeViewModel @Inject constructor(
                 Resource.Idle -> Resource.Idle
             }
         }
+        .catch { e -> Timber.e(e) }
+        .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,

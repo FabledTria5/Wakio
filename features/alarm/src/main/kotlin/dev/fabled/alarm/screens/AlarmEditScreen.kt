@@ -27,6 +27,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -43,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
@@ -56,6 +59,7 @@ import dev.fabled.alarm.components.AlarmNameDialog
 import dev.fabled.alarm.components.TimeCarousel
 import dev.fabled.alarm.model.AlarmSoundModel
 import dev.fabled.alarm.model.DayUiModel
+import dev.fabled.alarm.utils.TestTags
 import dev.fabled.common.ui.theme.Oxygen
 import dev.fabled.common.ui.theme.PrimaryDark
 import dev.fabled.common.ui.theme.PrimaryGradient
@@ -65,6 +69,8 @@ import dev.fabled.navigation.navigation_directions.AlarmDirections
 @Composable
 fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewModel) {
     val selectedAlarm by alarmViewModel.selectedAlarm.collectAsStateWithLifecycle()
+
+    val snackBarHostState = remember { SnackbarHostState() }
 
     var isAlarmNameDialogVisible by rememberSaveable { mutableStateOf(value = false) }
 
@@ -90,11 +96,12 @@ fun AlarmEditScreen(modifier: Modifier = Modifier, alarmViewModel: AlarmViewMode
                 onCancelClick = alarmViewModel::navigateUp,
                 onSaveClick = alarmViewModel::saveAlarm
             )
-        }
-    ) {
+        },
+        snackbarHost = { SnackbarHost(snackBarHostState) }
+    ) { padding ->
         Column(
             modifier = Modifier
-                .padding(top = it.calculateTopPadding())
+                .padding(top = padding.calculateTopPadding())
                 .padding(top = 25.dp)
         ) {
             AlarmNameEdit(
@@ -179,6 +186,7 @@ fun AlarmEditTopBar(
             fontSize = 24.sp
         )
         TextButton(
+            modifier = Modifier.testTag(TestTags.SAVE_ALARM_BUTTON),
             onClick = onSaveClick,
             contentPadding = PaddingValues(),
             enabled = canSaveAlarm
@@ -198,17 +206,20 @@ fun AlarmEditTopBar(
 @Composable
 fun AlarmNameEdit(alarmName: String, onEditAlarmClick: () -> Unit) {
     Row(
-        modifier = Modifier.clickable { onEditAlarmClick() },
+        modifier = Modifier
+            .clickable { onEditAlarmClick() }
+            .testTag(TestTags.ALARM_NAME_DIALOG_OPEN_BUTTON),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         AnimatedContent(
+            modifier = Modifier.testTag(TestTags.ALARM_NAME_TEXT),
             targetState = alarmName,
             transitionSpec = { fadeIn() with fadeOut() },
             label = "alarm_name_animation_label"
         ) {
             Text(
-                text = alarmName.ifEmpty { stringResource(id = R.string.alarm_name) },
+                text = alarmName,
                 color = Color.White,
                 fontFamily = Roboto,
                 fontWeight = FontWeight.Normal
@@ -260,7 +271,9 @@ fun RepeatModeSelector(
         }
         if (isRepeatOptionOpened) {
             Row(
-                modifier = modifier.padding(top = 5.dp),
+                modifier = modifier
+                    .padding(top = 5.dp)
+                    .testTag(TestTags.DAY_SELECTOR),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {

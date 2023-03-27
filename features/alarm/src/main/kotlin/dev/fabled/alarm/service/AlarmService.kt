@@ -44,7 +44,9 @@ class AlarmService : Service() {
 
     private var deviceVolume = 0
 
-    override fun onBind(intent: Intent?): IBinder = binder
+    override fun onBind(intent: Intent?): IBinder {
+        return binder
+    }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val alarmSoundModel = intent.getStringExtra(ALARM_SOUND_TAG)?.let { tag ->
@@ -121,7 +123,7 @@ class AlarmService : Service() {
         playRawResAudio(this, mediaPlayer, sound)
     }
 
-    fun stopService() {
+    fun stop() {
         vibrator.cancel()
 
         mediaPlayer.stop()
